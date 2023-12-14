@@ -1,0 +1,22 @@
+{
+  "name": "notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aditya-r-m/notes.git"
+  },
+  "author": "Aditya Mishra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aditya-r-m/notes/issues"
+  },
+  "homepage": "https://github.com/aditya-r-m/notes#readme",
+  "dependencies": {
+    "mathjax": "^3.2.2"
+  }
+}
