@@ -2,19 +2,18 @@
 <html>
 	<head>
 		<style>
-		* { background-color: #3E1C43; color: #FFFFFF; font-family: sans-serif; }
-		body { padding: 10px; padding-top: 50vh; text-align: center; }
-		input { display:inline-block; width: 80vw; margin: auto; padding: 10px; font-size: 20px; }
-		h1 { font-size: 26px; }
-		h3 { font-size: 24px; }
-		p { font-size: 22px; }
+			* { background-color: #3E1C43; color: #FFFFFF; font-family: sans-serif; }
+			body { padding: 10px; padding-top: 50vh; text-align: center; }
+			input { display:inline-block; width: 80vw; margin: auto; padding: 10px; font-size: 20px; }
+			h1 { font-size: 26px; }
+			h3 { font-size: 24px; }
+			p { font-size: 22px; }
 		</style>
+		<script src="index.js" defer></script>
 	</head>
 	<body>
-		<h1>My First Heading</h1>
-		<h3>My First Heading</h3>
-		<p>My first paragraph.</p>
-		<input type="text" onblur="this.focus()" autofocus></input>
+		<span id="s0"></span>
+		<input id="ie" type="text" onblur="this.focus()" onkeypress="handleInput(event)" autofocus></input>
 	</body>
 </html>
 
