@@ -27,6 +27,7 @@ for (cs = 0; cs < Math.max(1, inputSpanLength); cs++) {
 }
 cs--;
 window[`s${cs}o`].classList.add("editing");
+window.ie.value = window[`s${cs}i`].innerText;
 
 function centerInput() {
 	setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }));

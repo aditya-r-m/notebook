@@ -14,7 +14,7 @@ body {
 input {
     display: inline-block;
     width: 80vw;
-    padding: 10px;
+    padding: 1vw;
     font-size: 20px;
 }
 
@@ -41,7 +41,7 @@ span.span-output:before {
 
 span.editing {
     margin-top: 30px;
-    padding: 10px;
+    padding: 2vw;
     border: 1px solid gray;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
         rgba(0, 0, 0, 0.12) 0px -12px 30px,
