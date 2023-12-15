@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from os import listdir
 
 hostName = "localhost"
 serverPort = 8080
@@ -9,6 +10,9 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", f"text/{self.path.split('.')[-1]}")
         self.end_headers()
+        if self.path.endswith('list.html'):
+            self.wfile.write(bytes("\n".join(listdir("./data")), "utf-8"))
+
         with open(f"./{self.path}", 'r') as requested_file:
             self.wfile.write(bytes(requested_file.read(), "utf-8"))
 
