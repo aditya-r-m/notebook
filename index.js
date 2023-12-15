@@ -1,14 +1,29 @@
-let cs = 0;
-window.s0o.classList.add("editing");
-
-window.ie.scrollIntoView({ block: "center" });
-
 function typeset(el) {
 	MathJax.startup.promise = MathJax.startup.promise
 		.then(() => MathJax.typesetPromise([el]))
 		.catch((err) => console.log('Typeset failed: ' + err.message));
 }
 
+let cs = 0;
+function createSpan() {
+	if (!window[`s${cs}o`]) {
+		let s = document.createElement("span");
+		s.setAttribute("id", `s${cs}i`);
+		document.body.appendChild(s);
+		window[`s${cs}i`].classList.add("span-input");
+		s = document.createElement("span");
+		s.setAttribute("id", `s${cs}o`);
+		document.body.appendChild(s);
+		window[`s${cs}o`].classList.add("span-output");
+		window[`s${cs}o`].classList.add("editing");
+		window[`s${cs}o`].after(window.ie);
+	}
+}
+createSpan();
+
+function centerInput() {
+	setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }, 500));
+}
 
 function handleInput(event) {
 	window[`s${cs}i`].innerText = window.ie.value;
@@ -21,21 +36,12 @@ function handleInput(event) {
 		} else {
 			cs++;
 		}
-		if (!window[`s${cs}o`]) {
-			let s = document.createElement("span");
-			s.setAttribute("id", `s${cs}i`);
-			document.body.appendChild(s);
-			window[`s${cs}i`].classList.add("span-input");
-			s = document.createElement("span");
-			s.setAttribute("id", `s${cs}o`);
-			document.body.appendChild(s);
-			window[`s${cs}o`].classList.add("span-output");
-		}
-		window[`s${cs}o`].after(window.ie);
+		createSpan();
 		window.ie.value = window[`s${cs}i`].innerText;
 		window[`s${cs}o`].classList.add("editing");
+		window[`s${cs}o`].after(window.ie);
+		centerInput();
 	}
-	setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" }));
 }
 
 
