@@ -20,13 +20,7 @@ http.createServer(function (req, res) {
     '.js': 'text/javascript',
     '.json': 'application/json',
     '.css': 'text/css',
-    '.png': 'image/png',
     '.jpg': 'image/jpeg',
-    '.wav': 'audio/wav',
-    '.mp3': 'audio/mpeg',
-    '.svg': 'image/svg+xml',
-    '.pdf': 'application/pdf',
-    '.doc': 'application/msword'
   };
 
   fs.exists(pathname, function (exist) {

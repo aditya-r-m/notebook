@@ -1,0 +1,66 @@
+* {
+    background: transparent;
+    color: #FFFFFF;
+    text-align: left;
+}
+
+body {
+    background-color: #3E1C43;
+    text-align: center;
+    padding-top: 30vh;
+    padding-bottom: 50vh;
+}
+
+input {
+    display: inline-block;
+    width: 80vw;
+    padding: 10px;
+    font-size: 20px;
+}
+
+[data-mjx-error] {
+    background-color: black;
+}
+
+span.span-input {
+    display: none;
+}
+
+span.span-output {
+    display: inline-block;
+    width: 80vw;
+    margin: 10px;
+    font-size: 22px;
+    font-family: sans-serif;
+}
+
+span.span-output:before {
+    content: "\200D";
+    display: inline;
+}
+
+span.editing {
+    margin-top: 30px;
+    padding: 10px;
+    border: 1px solid gray;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px,
+        rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px,
+        rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+h1 {
+    font-size: 26px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+input {
+    margin-bottom: 30px;
+    outline: 0;
+    border: 1px solid gray;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
