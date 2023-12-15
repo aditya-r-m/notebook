@@ -13,16 +13,15 @@ function createSpan() {
 		window[`s${cs}i`].classList.add("span-input");
 		s = document.createElement("span");
 		s.setAttribute("id", `s${cs}o`);
-		document.body.appendChild(s);
+		document.body.insertBefore(s, window.ie);
 		window[`s${cs}o`].classList.add("span-output");
 		window[`s${cs}o`].classList.add("editing");
-		window[`s${cs}o`].after(window.ie);
 	}
 }
 createSpan();
 
 function centerInput() {
-	setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }, 500));
+	setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }));
 }
 
 function handleInput(event) {
@@ -33,13 +32,14 @@ function handleInput(event) {
 		window[`s${cs}o`].classList.remove("editing");
 		if (event.shiftKey) {
 			cs = Math.max(cs - 1, 0);
+			window.ie.after(window[`s${cs + 1}o`]);
 		} else {
 			cs++;
+			createSpan();
+			window.ie.before(window[`s${cs}o`]);
 		}
-		createSpan();
 		window.ie.value = window[`s${cs}i`].innerText;
 		window[`s${cs}o`].classList.add("editing");
-		window[`s${cs}o`].after(window.ie);
 		centerInput();
 	}
 }
