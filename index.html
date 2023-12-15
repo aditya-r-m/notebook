@@ -2,18 +2,36 @@
 <html>
 	<head>
 		<style>
-			* { background-color: #3E1C43; color: #FFFFFF; font-family: sans-serif; }
-			body { padding: 10px; padding-top: 50vh; text-align: center; }
-			input { display:inline-block; width: 80vw; margin: auto; padding: 10px; font-size: 20px; }
+			* { background: transparent; color: #FFFFFF; font-family: sans-serif; text-align: left; }
+			body { background-color: #3E1C43; text-align: center; padding-top: 50vh; padding-bottom: 50vh; }
+			input { display:inline-block; width: 80vw; padding: 10px; font-size: 20px; }
+			span { display: inline-block; width: 80vw; margin: 10px; font-size: 22px; }
+			span.editing {
+				margin-top: 30px;
+				padding: 10px;
+				border: 1px solid gray;
+				box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+			}
 			h1 { font-size: 26px; }
 			h3 { font-size: 24px; }
-			p { font-size: 22px; }
+			input {
+				margin-bottom: 30px;
+				outline: 0;
+				border: 1px solid gray;
+				box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+			}
+			span:before {
+				content: "\200D";
+				display:inline;
+			}
 		</style>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+		<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
 		<script src="index.js" defer></script>
 	</head>
 	<body>
 		<span id="s0"></span>
-		<input id="ie" type="text" onblur="this.focus()" onkeypress="handleInput(event)" autofocus></input>
+		<input id="ie" type="text" onblur="this.focus()" oninput="handleInput(event)" onkeypress="handleInput(event); this.blur()" autofocus></input>
 	</body>
 </html>
 
