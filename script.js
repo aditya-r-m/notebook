@@ -44,4 +44,14 @@ function handleInput(event) {
 	}
 }
 
-
+setInterval(function() {
+	fetch('http://localhost:8080/data/backup.html', {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: Array.from(
+			document.getElementsByClassName('span-input'))
+		.map(x => x.innerHTML).join('\n<span>\n')
+    }).catch(_ => {});
+}, 2048);

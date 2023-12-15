@@ -12,9 +12,14 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
         if self.path.endswith('list.html'):
             self.wfile.write(bytes("\n".join(listdir("./data")), "utf-8"))
-
         with open(f"./{self.path}", 'r') as requested_file:
             self.wfile.write(bytes(requested_file.read(), "utf-8"))
+
+    def do_PUT(self):
+        length = int(self.headers['Content-Length'])
+        with open(f"./{self.path}", 'wb') as f:
+            f.write(self.rfile.read(length))
+        self.send_response(201, "Created")
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
