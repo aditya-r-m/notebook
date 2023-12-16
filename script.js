@@ -33,10 +33,6 @@ cs--;
 window[`s${cs}o`].classList.add("editing");
 window.ie.value = window[`s${cs}i`].innerText;
 
-function centerInput() {
-	setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }));
-}
-
 function handleInput(event) {
 	window[`s${cs}i`].innerText = window[`s${cs}o`].innerText = window.ie.value;
 	typeset(window[`s${cs}o`]);
@@ -52,11 +48,11 @@ function handleInput(event) {
 		}
 		window.ie.value = window[`s${cs}i`].innerText;
 		window[`s${cs}o`].classList.add("editing");
-		centerInput();
+		setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }));
 	}
 }
 
-setInterval(function () {
+function save() {
 	fetch('http://localhost:8080/data/backup.html', {
 		method: 'PUT',
 		headers: {
@@ -67,4 +63,5 @@ setInterval(function () {
 			.map(x => x.outerHTML.replace(/^<span.*?>/, "<span>"))
 			.join('\n')
 	});
-}, 2048);
+}
+setInterval(save, 2048);
