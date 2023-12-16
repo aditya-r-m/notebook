@@ -11,13 +11,6 @@ body {
     padding-bottom: 50vh;
 }
 
-textarea {
-    display: inline-block;
-    width: 80vw;
-    padding: 1vw;
-    font-size: 20px;
-}
-
 [data-mjx-error] {
     background-color: black;
 }
@@ -30,8 +23,17 @@ span.span-output, p {
     display: inline-block;
     width: 80vw;
     margin: 10px;
-    font-size: 22px;
+    font-size: 18px;
     font-family: sans-serif;
+}
+
+span.hs {
+    font-size: 22px;
+}
+
+span.hl {
+    font-size: 26px;
+    text-align: center;
 }
 
 span.span-output:before {
@@ -53,13 +55,4 @@ span.editing, p {
 p {
     margin-top: 0px;
     font-family: monospace;
-    font-size: 20px;
-}
-
-h1 {
-    font-size: 26px;
-}
-
-h3 {
-    font-size: 24px;
 }

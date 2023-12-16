@@ -1,4 +1,11 @@
 function typeset(el) {
+	el.classList.remove("hl");
+	el.classList.remove("hs");
+	if (el.innerText.match(/^[0-9]+\.[0-9]+/)) {
+		el.classList.add("hs");
+	} else if (el.innerText.match(/^[0-9]+\./)) {
+		el.classList.add("hl");
+	}
 	MathJax.startup.promise = MathJax.startup.promise
 		.then(() => MathJax.typesetPromise([el]))
 		.catch((err) => console.log('Typeset failed: ' + err.message));
