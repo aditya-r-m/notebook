@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     web_server = HTTPServer((host_name, server_port), Server)
     print("Server started.")
-    print(f"Create/Edit notebooks on: http://{host_name}:{server_port}/<notebook>")
+    print(f"Create/Edit notebooks on: http://{host_name}:{server_port}/<notebook>.html")
 
     for notebook in listdir("./data"):
         print(f"Notebook available http://{host_name}:{server_port}/{notebook}")

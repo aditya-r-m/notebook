@@ -21,8 +21,12 @@ function createSpan() {
 	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText;
 	typeset(window[`s${cs}o`]);
 }
-let inputSpanLength = document.getElementsByClassName('span-input').length;
-for (cs = 0; cs < Math.max(1, inputSpanLength); cs++) {
+let inputSpans = Array.from(document.getElementsByTagName('span'));
+for (let i = 0; i < inputSpans.length; i++) {
+	inputSpans[i].setAttribute("id", `s${i}i`);
+	inputSpans[i].classList.add("span-input");
+}
+for (cs = 0; cs < Math.max(1, inputSpans.length); cs++) {
 	createSpan();
 }
 cs--;
@@ -52,14 +56,15 @@ function handleInput(event) {
 	}
 }
 
-setInterval(function() {
+setInterval(function () {
 	fetch('http://localhost:8080/data/backup.html', {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: Array.from(
+		method: 'PUT',
+		headers: {
+			'Content-type': 'application/json'
+		},
+		body: Array.from(
 			document.getElementsByClassName('span-input'))
-		.map(x => x.outerHTML).join('\n')
-    });
+			.map(x => x.outerHTML.replace(/^<span.*?>/, "<span>"))
+			.join('\n')
+	});
 }, 2048);
