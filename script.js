@@ -10,7 +10,7 @@ function createSpan() {
 		let s = document.createElement("span");
 		s.setAttribute("id", `s${cs}i`);
 		document.body.appendChild(s);
-		s.appendChild(document.createTextNode(" "));
+		s.innerText = " ";
 		window[`s${cs}i`].classList.add("span-input");
 	}
 	if (!window[`s${cs}o`]) {
@@ -26,6 +26,7 @@ let inputSpans = Array.from(document.getElementsByTagName('span'));
 for (let i = 0; i < inputSpans.length; i++) {
 	inputSpans[i].setAttribute("id", `s${i}i`);
 	inputSpans[i].classList.add("span-input");
+	inputSpans[i].innerText = inputSpans[i].innerText || " ";
 }
 for (cs = 0; cs < Math.max(1, inputSpans.length); cs++) {
 	createSpan();
@@ -46,15 +47,15 @@ setTimeout(initializeSelection);
 let visualMode = false;
 let visualModeBuffer = 0;
 function handleKeyUp(event) {
-	if (!visualMode) {
+	if (event.key.toLowerCase() === 'enter') {
+		scroll(1, event.shiftKey);
+	} else if (!visualMode) {
 		if (event.ctrlKey && event.key === '[') {
 			visualMode = true;
 			window.ie.setAttribute("contenteditable", "false");
 			const range = document.getSelection().getRangeAt(0);
 			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
 			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		} else if (event.key === 'Enter') {
-			scroll(1, event.shiftKey);
 		} else {
 			window[`s${cs}i`].innerText = window[`s${cs}o`].innerText = window.ie.innerText;
 			typeset(window[`s${cs}o`]);
@@ -63,63 +64,20 @@ function handleKeyUp(event) {
 		if (event.key >= "0" && event.key <= "9") {
 			visualModeBuffer *= 10;
 			visualModeBuffer += parseInt(event.key);
+			return;
 		} else if (event.key === "j" || event.key === "k") {
-			scroll(Math.max(1, visualModeBuffer), event.key === "k");
-			visualModeBuffer = 0;
-		} else if (event.key === 'i') {
-			visualMode = false;
-			window.ie.setAttribute("contenteditable", "true");
-			window.ie.focus();
-			document.getSelection().getRangeAt(0).collapse(true);
-		} else if (event.key === 'a') {
-			visualMode = false;
-			window.ie.setAttribute("contenteditable", "true");
-			window.ie.focus();
-			document.getSelection().getRangeAt(0).collapse(false);
-		} else if (event.key === 'A') {
-			visualMode = false;
-			window.ie.setAttribute("contenteditable", "true");
-			window.ie.focus();
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
-			range.collapse(false);
-		} else if (event.key === 'h') {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		} else if (event.key === 'l') {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		} else if (event.key === "^") {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], 0);
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		} else if (event.key === "$") {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length - 1);
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			scroll(Math.max(1, visualModeBuffer), event.key === "k", true);
+		} else if (visualModeNavigation(event)) {
+			visualModeBuffer = Math.max(0, visualModeBuffer - 1);
+			while (visualModeBuffer--) {
+				visualModeNavigation(event);
+			}
 		} else if (event.key === "V") {
 			const range = document.getSelection().getRangeAt(0);
 			range.setStart(window.ie.childNodes[0], 0);
 			range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
-		} else if (event.key === "b") {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
-			while (range.startOffset
-				&& window.ie.childNodes[0].textContent[range.startOffset - 1] !== " ") {
-				range.setStart(window.ie.childNodes[0], range.startOffset - 1);
-			}
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		} else if (event.key === "e") {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
-			while (range.startOffset < window.ie.childNodes[0].length - 1
-				&& window.ie.childNodes[0].textContent[range.startOffset + 1] !== " ") {
-				range.setStart(window.ie.childNodes[0], range.startOffset + 1);
-			}
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		}
+		} else visualModeTransition(event);
+		visualModeBuffer = 0;
 	}
 }
 document.body.onkeyup = handleKeyUp;
@@ -132,14 +90,76 @@ function handleKeyDown(event) {
 }
 document.body.onkeydown = handleKeyDown;
 
-function scroll(i, r) {
+function visualModeTransition(event) {
+	switch (event.key) {
+		case 'i':
+			document.getSelection().getRangeAt(0).collapse(true);
+			break;
+		case 'a':
+			document.getSelection().getRangeAt(0).collapse(false);
+			break;
+		case 'A':
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
+			range.collapse(false);
+			break;
+		default: return false;
+	}
+	visualMode = false;
+	window.ie.setAttribute("contenteditable", "true");
+	window.ie.focus();
+	return true;
+}
+
+function visualModeNavigation(event) {
+	const range = document.getSelection().getRangeAt(0);
+	switch (event.key) {
+		case 'h':
+			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			break;
+		case 'l':
+			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			break;
+		case '^':
+			range.setStart(window.ie.childNodes[0], 0);
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			break;
+		case '$':
+			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length - 1);
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			break;
+		case 'b':
+			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+			while (range.startOffset
+				&& window.ie.childNodes[0].textContent[range.startOffset - 1] !== " ") {
+				range.setStart(window.ie.childNodes[0], range.startOffset - 1);
+			}
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			break;
+		case 'e':
+			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
+			while (range.startOffset < window.ie.childNodes[0].length - 1
+				&& window.ie.childNodes[0].textContent[range.startOffset + 1] !== " ") {
+				range.setStart(window.ie.childNodes[0], range.startOffset + 1);
+			}
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			break;
+		default: return false;
+	}
+	return true;
+}
+
+function scroll(i, r, soft) {
 	window[`s${cs}o`].classList.remove("editing");
+	let spanCount = document.getElementsByClassName("span-input").length;
 	while (i--) {
 		if (r) {
 			cs = Math.max(cs - 1, 0);
 			window.ie.after(window[`s${cs + 1}o`]);
 		} else {
-			cs++;
+			cs = soft ? Math.min(cs + 1, spanCount - 1) : cs + 1;
 			createSpan();
 			window.ie.before(window[`s${cs}o`]);
 		}
