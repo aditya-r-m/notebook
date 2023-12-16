@@ -11,7 +11,7 @@ body {
     padding-bottom: 50vh;
 }
 
-input {
+textarea {
     display: inline-block;
     width: 80vw;
     padding: 1vw;
@@ -26,7 +26,7 @@ span.span-input {
     display: none;
 }
 
-span.span-output {
+span.span-output, p {
     display: inline-block;
     width: 80vw;
     margin: 10px;
@@ -39,7 +39,7 @@ span.span-output:before {
     display: inline;
 }
 
-span.editing {
+span.editing, p {
     margin-top: 30px;
     padding: 2vw;
     border: 1px solid gray;
@@ -50,6 +50,10 @@ span.editing {
         rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
+p {
+    margin-top: 0px;
+}
+
 h1 {
     font-size: 26px;
 }
@@ -58,9 +62,13 @@ h3 {
     font-size: 24px;
 }
 
-input {
+textarea {
     margin-bottom: 30px;
     outline: 0;
     border: 1px solid gray;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.hidden {
+    display: none;
 }

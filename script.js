@@ -31,14 +31,41 @@ for (cs = 0; cs < Math.max(1, inputSpans.length); cs++) {
 }
 cs--;
 window[`s${cs}o`].classList.add("editing");
-window.ie.value = window[`s${cs}i`].innerText;
+window.ie.innerText = window[`s${cs}i`].innerText;
+window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
 
-function handleInput(event) {
-	window[`s${cs}i`].innerText = window[`s${cs}o`].innerText = window.ie.value;
-	typeset(window[`s${cs}o`]);
-	if (event.keyCode === 13) {
-		window[`s${cs}o`].classList.remove("editing");
-		if (event.shiftKey) {
+let visualMode = false;
+function handleKeyUp(event) {
+	if (!visualMode) {
+		if (event.ctrlKey && event.key === '[') {
+			visualMode = true;
+			window.ie.setAttribute("contenteditable", "false");
+		} else if (event.key === 'Enter') {
+			scroll(1, event.shiftKey);
+		} else {
+			window[`s${cs}i`].innerText = window[`s${cs}o`].innerText = window.ie.innerText;
+			typeset(window[`s${cs}o`]);
+		}
+	} else {
+		if (event.key === 'i') {
+			visualMode = false;
+			window.ie.setAttribute("contenteditable", "true");
+			window.ie.focus();
+			const range = document.createRange();
+			const selection = window.getSelection();
+			range.setStart(window.ie, 1);
+			range.collapse(true);
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	}
+}
+document.body.onkeyup = handleKeyUp;
+
+function scroll(i, r) {
+	window[`s${cs}o`].classList.remove("editing");
+	while (i--) {
+		if (r) {
 			cs = Math.max(cs - 1, 0);
 			window.ie.after(window[`s${cs + 1}o`]);
 		} else {
@@ -46,10 +73,10 @@ function handleInput(event) {
 			createSpan();
 			window.ie.before(window[`s${cs}o`]);
 		}
-		window.ie.value = window[`s${cs}i`].innerText;
-		window[`s${cs}o`].classList.add("editing");
-		setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }));
 	}
+	window.ie.innerText = window[`s${cs}i`].innerText;
+	window[`s${cs}o`].classList.add("editing");
+	window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function save() {
@@ -64,4 +91,4 @@ function save() {
 			.join('\n')
 	});
 }
-setInterval(save, 2048);
+setInterval(save, 4096);
