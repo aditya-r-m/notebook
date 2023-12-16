@@ -15,12 +15,12 @@ class Server(BaseHTTPRequestHandler):
             with open("./head.html", 'r') as requested_file:
                 self.wfile.write(bytes(requested_file.read(), "utf-8"))
             self.wfile.write(bytes("<body>", "utf-8"))
-            with open("./input.html", 'r') as requested_file:
-                self.wfile.write(bytes(requested_file.read(), "utf-8"))
             try:
                 with open(f"./data/{self.path}", 'r') as requested_file:
                     self.wfile.write(bytes(requested_file.read(), "utf-8"))
             except: pass
+            with open("./input.html", 'r') as requested_file:
+                self.wfile.write(bytes(requested_file.read(), "utf-8"))
             self.wfile.write(bytes("</body>", "utf-8"))
             self.wfile.write(bytes("</html>", "utf-8"))
         else:
