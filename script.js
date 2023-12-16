@@ -178,7 +178,7 @@ function scroll(i, r, soft) {
 }
 
 function save() {
-	fetch('http://localhost:8080/data/backup.html', {
+	fetch(`http://localhost:8080/data/${window.location.href.replace(/^.*\//, '')}`, {
 		method: 'PUT',
 		headers: {
 			'Content-type': 'application/json'
