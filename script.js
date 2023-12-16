@@ -62,6 +62,14 @@ function handleKeyUp(event) {
 }
 document.body.onkeyup = handleKeyUp;
 
+function handleKeyDown(event) {
+	if (event.key === 'Enter') {
+		event.preventDefault();
+		return false;
+	}
+}
+document.body.onkeydown = handleKeyDown;
+
 function scroll(i, r) {
 	window[`s${cs}o`].classList.remove("editing");
 	while (i--) {
