@@ -34,12 +34,23 @@ window[`s${cs}o`].classList.add("editing");
 window.ie.innerText = window[`s${cs}i`].innerText;
 window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
 
+function initializeSelection() {
+	window.ie.focus();
+	const range = document.getSelection().getRangeAt(0);
+	range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
+	range.collapse(false);
+}
+setTimeout(initializeSelection);
+
 let visualMode = false;
 function handleKeyUp(event) {
 	if (!visualMode) {
 		if (event.ctrlKey && event.key === '[') {
 			visualMode = true;
 			window.ie.setAttribute("contenteditable", "false");
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
 		} else if (event.key === 'Enter') {
 			scroll(1, event.shiftKey);
 		} else {
@@ -47,16 +58,53 @@ function handleKeyUp(event) {
 			typeset(window[`s${cs}o`]);
 		}
 	} else {
+		if (event.key === "j" || event.key === "k") {
+			scroll(1, event.key === "k");
+		}
 		if (event.key === 'i') {
 			visualMode = false;
 			window.ie.setAttribute("contenteditable", "true");
 			window.ie.focus();
-			const range = document.createRange();
-			const selection = window.getSelection();
-			range.setStart(window.ie, 1);
-			range.collapse(true);
-			selection.removeAllRanges();
-			selection.addRange(range);
+			document.getSelection().getRangeAt(0).collapse(true);
+		}
+		if (event.key === 'a') {
+			visualMode = false;
+			window.ie.setAttribute("contenteditable", "true");
+			window.ie.focus();
+			document.getSelection().getRangeAt(0).collapse(false);
+		}
+		if (event.key === 'A') {
+			visualMode = false;
+			window.ie.setAttribute("contenteditable", "true");
+			window.ie.focus();
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
+			range.collapse(false);
+		}
+		if (event.key === 'h') {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		}
+		if (event.key === 'l') {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		}
+		if (event.key === "^") {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], 0);
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		}
+		if (event.key === "$") {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length - 1);
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		}
+		if (event.key === "V") {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], 0);
+			range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
 		}
 	}
 }
@@ -85,6 +133,7 @@ function scroll(i, r) {
 	window.ie.innerText = window[`s${cs}i`].innerText;
 	window[`s${cs}o`].classList.add("editing");
 	window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
+	initializeSelection();
 }
 
 function save() {

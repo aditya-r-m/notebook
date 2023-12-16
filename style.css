@@ -52,6 +52,8 @@ span.editing, p {
 
 p {
     margin-top: 0px;
+    font-family: monospace;
+    font-size: 20px;
 }
 
 h1 {
@@ -60,15 +62,4 @@ h1 {
 
 h3 {
     font-size: 24px;
-}
-
-textarea {
-    margin-bottom: 30px;
-    outline: 0;
-    border: 1px solid gray;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-.hidden {
-    display: none;
 }
