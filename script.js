@@ -47,10 +47,10 @@ setTimeout(initializeSelection);
 let visualMode = false;
 let visualModeBuffer = 0;
 function handleKeyUp(event) {
-	if (event.key.toLowerCase() === 'enter') {
+	if (event.key === 'Enter') {
 		scroll(1, event.shiftKey);
 	} else if (!visualMode) {
-		if (event.ctrlKey && event.key === '[') {
+		if (event.key === 'Escape' || (event.ctrlKey && event.key === '[')) {
 			visualMode = true;
 			window.ie.setAttribute("contenteditable", "false");
 			const range = document.getSelection().getRangeAt(0);
