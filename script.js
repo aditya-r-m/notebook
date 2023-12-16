@@ -106,6 +106,24 @@ function handleKeyUp(event) {
 			range.setStart(window.ie.childNodes[0], 0);
 			range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
 		}
+		if (event.key === "b") {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+			while (range.startOffset
+				&& window.ie.childNodes[0].textContent[range.startOffset - 1] !== " ") {
+				range.setStart(window.ie.childNodes[0], range.startOffset - 1);
+			}
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		}
+		if (event.key === "e") {
+			const range = document.getSelection().getRangeAt(0);
+			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
+			while (range.startOffset < window.ie.childNodes[0].length - 1
+				&& window.ie.childNodes[0].textContent[range.startOffset + 1] !== " ") {
+				range.setStart(window.ie.childNodes[0], range.startOffset + 1);
+			}
+			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		}
 	}
 }
 document.body.onkeyup = handleKeyUp;
