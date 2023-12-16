@@ -36,7 +36,7 @@ span.hl {
     text-align: center;
 }
 
-span.span-output:before {
+span.span-output:before, p:before {
     content: "\200D";
     display: inline;
 }
