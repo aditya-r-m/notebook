@@ -1,10 +1,11 @@
+let supportedStyles = ["hl", "hs", "tc"];
 function typeset(el) {
-	el.classList.remove("hl");
-	el.classList.remove("hs");
-	if (el.innerText.match(/^[0-9]+\.[0-9]+/)) {
-		el.classList.add("hs");
-	} else if (el.innerText.match(/^[0-9]+\./)) {
-		el.classList.add("hl");
+	for (let supportedStyle of supportedStyles) {
+		el.classList.remove(supportedStyle);
+		if (el.innerText.startsWith(`${supportedStyle}|`)) {
+			el.classList.add(supportedStyle);
+			el.innerText = el.innerText.replace(`${supportedStyle}|`, "").trim();
+		}
 	}
 	MathJax.startup.promise = MathJax.startup.promise
 		.then(() => MathJax.typesetPromise([el]))
@@ -43,31 +44,29 @@ window[`s${cs}o`].classList.add("editing");
 window.ie.innerText = window[`s${cs}i`].innerText;
 window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
 
-function initializeSelection() {
-	window.ie.focus();
-	const range = document.getSelection().getRangeAt(0);
-	range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
-	range.collapse(false);
+function handleKeyUp(event) {
+	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText = window.ie.innerText;
+	typeset(window[`s${cs}o`]);
 }
-setTimeout(initializeSelection);
+document.body.onkeyup = handleKeyUp;
 
 let visualMode = false;
 let visualModeBuffer = 0;
-function handleKeyUp(event) {
+function handleKeyDown(event) {
 	if (event.key === 'Enter') {
 		scroll(1, event.shiftKey);
-	} else if (!visualMode) {
-		if (event.key === 'Escape' || (event.ctrlKey && event.key === '[')) {
-			visualMode = true;
-			window.ie.setAttribute("contenteditable", "false");
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
-		} else {
-			window[`s${cs}i`].innerText = window[`s${cs}o`].innerText = window.ie.innerText;
-			typeset(window[`s${cs}o`]);
-		}
-	} else {
+		event.preventDefault();
+		return false;
+	} else if (!visualMode
+		&& (event.key === 'Escape' || (event.ctrlKey && event.key === '['))) {
+		visualMode = true;
+		window.ie.setAttribute("contenteditable", "false");
+		const range = document.getSelection().getRangeAt(0);
+		range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+		range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		event.preventDefault();
+		return false;
+	} else if (visualMode) {
 		if (event.key >= "0" && event.key <= "9") {
 			visualModeBuffer *= 10;
 			visualModeBuffer += parseInt(event.key);
@@ -85,12 +84,6 @@ function handleKeyUp(event) {
 			range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
 		} else visualModeTransition(event);
 		visualModeBuffer = 0;
-	}
-}
-document.body.onkeyup = handleKeyUp;
-
-function handleKeyDown(event) {
-	if (event.key === 'Enter') {
 		event.preventDefault();
 		return false;
 	}
@@ -157,6 +150,19 @@ function visualModeNavigation(event) {
 	}
 	return true;
 }
+
+function initializeSelection() {
+	window.ie.focus();
+	const range = document.getSelection().getRangeAt(0);
+	if (!visualMode) {
+		range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
+		range.collapse(false);
+	} else {
+		range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length - 1);
+		range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
+	}
+}
+setTimeout(initializeSelection);
 
 function scroll(i, r, soft) {
 	window[`s${cs}o`].classList.remove("editing");
