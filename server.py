@@ -12,8 +12,10 @@ class Server(BaseHTTPRequestHandler):
         self.end_headers()
         if mime == "html":
             self.wfile.write(bytes("<html>", "utf-8"))
+            self.wfile.write(bytes("<head>", "utf-8"))
             with open("./head.html", 'r') as requested_file:
                 self.wfile.write(bytes(requested_file.read(), "utf-8"))
+            self.wfile.write(bytes("</head>", "utf-8"))
             self.wfile.write(bytes("<body>", "utf-8"))
             try:
                 self.wfile.write(bytes("<pre>", "utf-8"))
