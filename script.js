@@ -1,5 +1,16 @@
+let p = document.createElement("p");
+document.body.appendChild(p);
+p.setAttribute("contenteditable", "true");
+p.setAttribute("id", "ie");
+p.focus();
+p.onblur = () => p.focus();
+
 let supportedStyles = ["hl", "hs", "tc"];
 function typeset(el) {
+	if (!MathJax.startup.promise) {
+		setTimeout(() => typeset(el), 128);
+		return;
+	}
 	for (let supportedStyle of supportedStyles) {
 		el.classList.remove(supportedStyle);
 		if (el.innerText.startsWith(`${supportedStyle}|`)) {
@@ -69,7 +80,7 @@ function handleKeyDown(event) {
 		&& (event.key === 'Escape' || (event.ctrlKey && event.key === '['))) {
 		visualMode = true;
 		window.ie.setAttribute("contenteditable", "false");
-		window.ie.innerText = window.ie.innerText || " ";
+		if (!window.ie.innerText) window.ie.innerText = " ";
 		const range = document.getSelection().getRangeAt(0);
 		range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
 		range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
@@ -204,4 +215,4 @@ function save() {
 			.join('\n')
 	});
 }
-setInterval(save, 4096);
+if (window.enableAutoSave) setInterval(save, 4096);
