@@ -30,6 +30,14 @@ function createSpan() {
 	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText;
 	typeset(window[`s${cs}o`]);
 }
+if (document.getElementsByTagName('pre').length) {
+	document.getElementsByTagName('pre')[0].innerText.split('\n')
+	.forEach(line => {
+		let s = document.createElement("span");
+		document.body.appendChild(s);
+		s.innerText = line;
+	})
+}
 let inputSpans = Array.from(document.getElementsByTagName('span'));
 for (let i = 0; i < inputSpans.length; i++) {
 	inputSpans[i].setAttribute("id", `s${i}i`);
@@ -42,10 +50,10 @@ for (cs = 0; cs < Math.max(1, inputSpans.length); cs++) {
 cs--;
 window[`s${cs}o`].classList.add("editing");
 window.ie.innerText = window[`s${cs}i`].innerText;
-window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
+setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }), 500);
 
 function handleKeyUp(event) {
-	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText = window.ie.innerText;
+	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText = window.ie.innerText || " ";
 	typeset(window[`s${cs}o`]);
 }
 document.body.onkeyup = handleKeyUp;
@@ -61,6 +69,7 @@ function handleKeyDown(event) {
 		&& (event.key === 'Escape' || (event.ctrlKey && event.key === '['))) {
 		visualMode = true;
 		window.ie.setAttribute("contenteditable", "false");
+		window.ie.innerText = window.ie.innerText || " ";
 		const range = document.getSelection().getRangeAt(0);
 		range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
 		range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
@@ -184,14 +193,14 @@ function scroll(i, r, soft) {
 }
 
 function save() {
-	fetch(`http://localhost:8080/data/${window.location.href.replace(/^.*\//, '')}`, {
+	fetch(`http://localhost:8080/${window.location.href.replace(/^.*\//, '')}`, {
 		method: 'PUT',
 		headers: {
 			'Content-type': 'application/json'
 		},
 		body: Array.from(
 			document.getElementsByClassName('span-input'))
-			.map(x => x.outerHTML.replace(/^<span.*?>/, "<span>"))
+			.map(x => x.innerHTML)
 			.join('\n')
 	});
 }

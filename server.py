@@ -16,8 +16,10 @@ class Server(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(requested_file.read(), "utf-8"))
             self.wfile.write(bytes("<body>", "utf-8"))
             try:
+                self.wfile.write(bytes("<pre>", "utf-8"))
                 with open(f"./data/{self.path}", 'r') as requested_file:
                     self.wfile.write(bytes(requested_file.read(), "utf-8"))
+                self.wfile.write(bytes("</pre>", "utf-8"))
             except: pass
             with open("./input.html", 'r') as requested_file:
                 self.wfile.write(bytes(requested_file.read(), "utf-8"))
@@ -30,7 +32,7 @@ class Server(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         length = int(self.headers['Content-Length'])
-        with open(f"./{self.path}", 'wb') as f:
+        with open(f"./data/{self.path}", 'wb') as f:
             f.write(self.rfile.read(length))
         self.send_response(201, "Created")
         self.end_headers()
