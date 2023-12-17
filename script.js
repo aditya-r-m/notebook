@@ -1,16 +1,8 @@
-let p = document.createElement("p");
-document.body.appendChild(p);
-p.setAttribute("contenteditable", "true");
-p.setAttribute("id", "ie");
-p.focus();
-p.onblur = () => p.focus();
+let notebook = window.location.search.replace("?", "");
+if (!notebook) notebook = "s00_empirical_mean_convergence";
 
 let supportedStyles = ["hl", "hs", "tc"];
 function typeset(el) {
-	if (!MathJax.startup.promise) {
-		setTimeout(() => typeset(el), 128);
-		return;
-	}
 	for (let supportedStyle of supportedStyles) {
 		el.classList.remove(supportedStyle);
 		if (el.innerText.startsWith(`${supportedStyle}|`)) {
@@ -35,36 +27,15 @@ function createSpan() {
 	if (!window[`s${cs}o`]) {
 		s = document.createElement("span");
 		s.setAttribute("id", `s${cs}o`);
-		document.body.insertBefore(s, window.ie);
+		document.body.insertBefore(s, window.textInput);
 		window[`s${cs}o`].classList.add("span-output");
 	}
 	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText;
 	typeset(window[`s${cs}o`]);
 }
-if (document.getElementsByTagName('pre').length) {
-	document.getElementsByTagName('pre')[0].innerText.split('\n')
-	.forEach(line => {
-		let s = document.createElement("span");
-		document.body.appendChild(s);
-		s.innerText = line;
-	})
-}
-let inputSpans = Array.from(document.getElementsByTagName('span'));
-for (let i = 0; i < inputSpans.length; i++) {
-	inputSpans[i].setAttribute("id", `s${i}i`);
-	inputSpans[i].classList.add("span-input");
-	inputSpans[i].innerText = inputSpans[i].innerText || " ";
-}
-for (cs = 0; cs < Math.max(1, inputSpans.length); cs++) {
-	createSpan();
-}
-cs--;
-window[`s${cs}o`].classList.add("editing");
-window.ie.innerText = window[`s${cs}i`].innerText;
-setTimeout(() => window.ie.scrollIntoView({ behavior: "smooth", block: "center" }), 500);
 
 function handleKeyUp(event) {
-	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText = window.ie.innerText || " ";
+	window[`s${cs}o`].innerText = window[`s${cs}i`].innerText = window.textInput.innerText || " ";
 	typeset(window[`s${cs}o`]);
 }
 document.body.onkeyup = handleKeyUp;
@@ -79,11 +50,11 @@ function handleKeyDown(event) {
 	} else if (!visualMode
 		&& (event.key === 'Escape' || (event.ctrlKey && event.key === '['))) {
 		visualMode = true;
-		window.ie.setAttribute("contenteditable", "false");
-		if (!window.ie.innerText) window.ie.innerText = " ";
+		window.textInput.setAttribute("contenteditable", "false");
+		if (!window.textInput.innerText) window.textInput.innerText = " ";
 		const range = document.getSelection().getRangeAt(0);
-		range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
-		range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+		range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
+		range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 		event.preventDefault();
 		return false;
 	} else if (visualMode) {
@@ -100,8 +71,8 @@ function handleKeyDown(event) {
 			}
 		} else if (event.key === "V") {
 			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], 0);
-			range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
+			range.setStart(window.textInput.childNodes[0], 0);
+			range.setEnd(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
 		} else visualModeTransition(event);
 		visualModeBuffer = 0;
 		event.preventDefault();
@@ -120,14 +91,14 @@ function visualModeTransition(event) {
 			break;
 		case 'A':
 			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
+			range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
 			range.collapse(false);
 			break;
 		default: return false;
 	}
 	visualMode = false;
-	window.ie.setAttribute("contenteditable", "true");
-	window.ie.focus();
+	window.textInput.setAttribute("contenteditable", "true");
+	window.textInput.focus();
 	return true;
 }
 
@@ -135,36 +106,36 @@ function visualModeNavigation(event) {
 	const range = document.getSelection().getRangeAt(0);
 	switch (event.key) {
 		case 'h':
-			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
+			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 			break;
 		case 'l':
-			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			range.setStart(window.textInput.childNodes[0], Math.min(range.startOffset + 1, window.textInput.childNodes[0].length - 1));
+			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 			break;
 		case '^':
-			range.setStart(window.ie.childNodes[0], 0);
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			range.setStart(window.textInput.childNodes[0], 0);
+			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 			break;
 		case '$':
-			range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length - 1);
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length - 1);
+			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 			break;
 		case 'b':
-			range.setStart(window.ie.childNodes[0], Math.max(0, range.startOffset - 1));
+			range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
 			while (range.startOffset
-				&& window.ie.childNodes[0].textContent[range.startOffset - 1] !== " ") {
-				range.setStart(window.ie.childNodes[0], range.startOffset - 1);
+				&& window.textInput.childNodes[0].textContent[range.startOffset - 1] !== " ") {
+				range.setStart(window.textInput.childNodes[0], range.startOffset - 1);
 			}
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 			break;
 		case 'e':
-			range.setStart(window.ie.childNodes[0], Math.min(range.startOffset + 1, window.ie.childNodes[0].length - 1));
-			while (range.startOffset < window.ie.childNodes[0].length - 1
-				&& window.ie.childNodes[0].textContent[range.startOffset + 1] !== " ") {
-				range.setStart(window.ie.childNodes[0], range.startOffset + 1);
+			range.setStart(window.textInput.childNodes[0], Math.min(range.startOffset + 1, window.textInput.childNodes[0].length - 1));
+			while (range.startOffset < window.textInput.childNodes[0].length - 1
+				&& window.textInput.childNodes[0].textContent[range.startOffset + 1] !== " ") {
+				range.setStart(window.textInput.childNodes[0], range.startOffset + 1);
 			}
-			range.setEnd(window.ie.childNodes[0], range.startOffset + 1);
+			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 			break;
 		default: return false;
 	}
@@ -172,17 +143,16 @@ function visualModeNavigation(event) {
 }
 
 function initializeSelection() {
-	window.ie.focus();
+	window.textInput.focus();
 	const range = document.getSelection().getRangeAt(0);
 	if (!visualMode) {
-		range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length);
+		range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
 		range.collapse(false);
 	} else {
-		range.setStart(window.ie.childNodes[0], window.ie.childNodes[0].length - 1);
-		range.setEnd(window.ie.childNodes[0], window.ie.childNodes[0].length);
+		range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length - 1);
+		range.setEnd(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
 	}
 }
-setTimeout(initializeSelection);
 
 function scroll(i, r, soft) {
 	window[`s${cs}o`].classList.remove("editing");
@@ -190,21 +160,47 @@ function scroll(i, r, soft) {
 	while (i--) {
 		if (r) {
 			cs = Math.max(cs - 1, 0);
-			window.ie.after(window[`s${cs + 1}o`]);
+			window.textInput.after(window[`s${cs + 1}o`]);
 		} else {
 			cs = soft ? Math.min(cs + 1, spanCount - 1) : cs + 1;
 			createSpan();
-			window.ie.before(window[`s${cs}o`]);
+			window.textInput.before(window[`s${cs}o`]);
 		}
 	}
-	window.ie.innerText = window[`s${cs}i`].innerText;
+	window.textInput.innerText = window[`s${cs}i`].innerText;
 	window[`s${cs}o`].classList.add("editing");
-	window.ie.scrollIntoView({ behavior: "smooth", block: "center" });
+	window.textInput.scrollIntoView({ behavior: "smooth", block: "center" });
 	initializeSelection();
 }
 
+function load() {
+	return fetch(`${window.location.href.replace(/\?.*/, '')}/documents/${notebook}.tex`, {
+		'method': 'GET',
+		'Content-type': 'text/plain'
+	})
+		.then(res => res.text())
+		.then(txt => txt.split("\n").forEach((line, i) => {
+			let s = document.createElement("span");
+			document.body.appendChild(s);
+			s.setAttribute("id", `s${i}i`);
+			s.classList.add("span-input");
+			s.innerText = line || " ";
+			cs = i;
+			createSpan();
+		}))
+		.then(() => {
+			window[`s${cs}o`].classList.add("editing");
+			window.textInput.innerText = window[`s${cs}i`].innerText;
+			createSpan();
+			setTimeout(() => {
+				window.textInput.scrollIntoView({ behavior: "smooth", block: "center" });
+				initializeSelection();
+			}, 256);
+		});
+}
+
 function save() {
-	fetch(`http://localhost:8080/${window.location.href.replace(/^.*\//, '')}`, {
+	return fetch(`${window.location.href.replace(/\?.*/, '')}/documents/${notebook}.tex`, {
 		method: 'PUT',
 		headers: {
 			'Content-type': 'application/json'
@@ -213,6 +209,11 @@ function save() {
 			document.getElementsByClassName('span-input'))
 			.map(x => x.innerHTML)
 			.join('\n')
-	});
+	}).then(res => res.ok ? Promise.resolve() : Promise.reject(res));
 }
-if (window.enableAutoSave) setInterval(save, 4096);
+
+function autoSave() {
+	return new Promise(r => setTimeout(r, 2048)).then(save).then(autoSave).catch(console.log);
+}
+
+load().then(autoSave);

@@ -1,14 +1,22 @@
 <html>
-    <head>
-        <link rel="icon" href="data:,">
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script>
-            $(() =>
-                $("pre").load("data/s00_empirical_mean_convergence.tex",
-                    () => $("head").load("head.html")));
-        </script>
-    </head>
-    <body>
-        <pre></pre>
-    </body>
+
+<head>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+    <script>
+        MathJax = {
+            startup: {
+                typeset: false
+            },
+        }
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <p id="textInput" contenteditable="true" onblur="this.focus()" autofocus="true"></p>
+</body>
+
 </html>

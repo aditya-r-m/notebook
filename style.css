@@ -19,7 +19,8 @@ span.span-input {
     display: none;
 }
 
-span.span-output, p {
+span.span-output,
+p {
     display: inline-block;
     width: 80vw;
     margin: 10px;
@@ -44,7 +45,8 @@ span.span-output:before {
     display: inline;
 }
 
-span.editing, p {
+span.editing,
+p {
     margin-top: 30px;
     padding: 2vw;
     border: 1px solid gray;
