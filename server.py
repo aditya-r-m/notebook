@@ -17,7 +17,7 @@ class Server(BaseHTTPRequestHandler):
             self.wfile.write(bytes("<body>", "utf-8"))
             try:
                 self.wfile.write(bytes("<pre>", "utf-8"))
-                with open(f"./data/{self.path}", 'r') as requested_file:
+                with open(f"./data/{self.path.replace('html', 'tex')}", 'r') as requested_file:
                     self.wfile.write(bytes(requested_file.read(), "utf-8"))
                 self.wfile.write(bytes("</pre>", "utf-8"))
             except: pass
@@ -32,7 +32,7 @@ class Server(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         length = int(self.headers['Content-Length'])
-        with open(f"./data/{self.path}", 'wb') as f:
+        with open(f"./data/{self.path.replace('html', 'tex')}", 'wb') as f:
             f.write(self.rfile.read(length))
         self.send_response(201, "Created")
         self.end_headers()
@@ -43,8 +43,9 @@ if __name__ == "__main__":
     print("Server started.")
     print(f"Create/Edit notebooks on: http://{host_name}:{server_port}/<notebook>.html")
 
+    print("Notebooks available:")
     for notebook in listdir("./data"):
-        print(f"Notebook available http://{host_name}:{server_port}/{notebook}")
+        print(f"http://{host_name}:{server_port}/{notebook.replace('tex', 'html')}")
 
     try: web_server.serve_forever()
     except KeyboardInterrupt: pass
