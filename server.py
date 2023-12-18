@@ -28,11 +28,11 @@ if __name__ == "__main__":
 
     web_server = HTTPServer((host_name, server_port), Server)
     print("Server started.")
-    print(f"Create/Edit notebooks on: http://{host_name}:{server_port}/?<notebook>")
+    print(f"Create/Edit Notes on: http://{host_name}:{server_port}/?<page>")
 
-    print("Notebooks available:")
-    for notebook in listdir("./documents"):
-        print(f"http://{host_name}:{server_port}/?{notebook.replace('.tex', '')}")
+    print("Pages available:")
+    for page in listdir("./pages"):
+        print(f"http://{host_name}:{server_port}/?{page.replace('.tex', '')}")
 
     try: web_server.serve_forever()
     except KeyboardInterrupt: pass

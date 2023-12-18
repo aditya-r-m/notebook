@@ -1,5 +1,5 @@
-let notebook = window.location.search.replace("?", "");
-if (!notebook) notebook = "s00_empirical_mean_convergence";
+let page = window.location.search.replace("?", "");
+if (!page) page = "s00_empirical_mean_convergence";
 
 let supportedStyles = ["hl", "hs", "tc"];
 function typeset(el) {
@@ -174,7 +174,7 @@ function scroll(i, r, soft) {
 }
 
 function load() {
-	return fetch(`${window.location.href.replace(/\?.*/, '')}/documents/${notebook}.tex`, {
+	return fetch(`${window.location.href.replace(/\?.*/, '')}/pages/${page}.tex`, {
 		'method': 'GET',
 		'Content-type': 'text/plain'
 	})
@@ -200,7 +200,7 @@ function load() {
 }
 
 function save() {
-	return fetch(`${window.location.href.replace(/\?.*/, '')}/documents/${notebook}.tex`, {
+	return fetch(`${window.location.href.replace(/\?.*/, '')}/pages/${page}.tex`, {
 		method: 'PUT',
 		headers: {
 			'Content-type': 'application/json'
