@@ -40,16 +40,16 @@ function handleKeyUp(event) {
 }
 document.body.onkeyup = handleKeyUp;
 
-let visualMode = false;
-let visualModeBuffer = 0;
+let viMode = false;
+let viModeBuffer = 0;
 function handleKeyDown(event) {
 	if (event.key === 'Enter') {
 		scroll(1, event.shiftKey);
 		event.preventDefault();
 		return false;
-	} else if (!visualMode
+	} else if (!viMode
 		&& (event.key === 'Escape' || (event.ctrlKey && event.key === '['))) {
-		visualMode = true;
+		viMode = true;
 		window.textInput.setAttribute("contenteditable", "false");
 		if (!window.textInput.innerText) window.textInput.innerText = " ";
 		const range = document.getSelection().getRangeAt(0);
@@ -57,31 +57,31 @@ function handleKeyDown(event) {
 		range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 		event.preventDefault();
 		return false;
-	} else if (visualMode) {
+	} else if (viMode) {
 		if (event.key >= "0" && event.key <= "9") {
-			visualModeBuffer *= 10;
-			visualModeBuffer += parseInt(event.key);
+			viModeBuffer *= 10;
+			viModeBuffer += parseInt(event.key);
 			return;
 		} else if (event.key === "j" || event.key === "k") {
-			scroll(Math.max(1, visualModeBuffer), event.key === "k", true);
-		} else if (visualModeNavigation(event)) {
-			visualModeBuffer = Math.max(0, visualModeBuffer - 1);
-			while (visualModeBuffer--) {
-				visualModeNavigation(event);
+			scroll(Math.max(1, viModeBuffer), event.key === "k", true);
+		} else if (viModeNavigation(event)) {
+			viModeBuffer = Math.max(0, viModeBuffer - 1);
+			while (viModeBuffer--) {
+				viModeNavigation(event);
 			}
 		} else if (event.key === "V") {
 			const range = document.getSelection().getRangeAt(0);
 			range.setStart(window.textInput.childNodes[0], 0);
 			range.setEnd(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
-		} else visualModeTransition(event);
-		visualModeBuffer = 0;
+		} else viModeTransition(event);
+		viModeBuffer = 0;
 		event.preventDefault();
 		return false;
 	}
 }
 document.body.onkeydown = handleKeyDown;
 
-function visualModeTransition(event) {
+function viModeTransition(event) {
 	switch (event.key) {
 		case 'i':
 			document.getSelection().getRangeAt(0).collapse(true);
@@ -96,13 +96,13 @@ function visualModeTransition(event) {
 			break;
 		default: return false;
 	}
-	visualMode = false;
+	viMode = false;
 	window.textInput.setAttribute("contenteditable", "true");
 	window.textInput.focus();
 	return true;
 }
 
-function visualModeNavigation(event) {
+function viModeNavigation(event) {
 	const range = document.getSelection().getRangeAt(0);
 	switch (event.key) {
 		case 'h':
@@ -145,7 +145,7 @@ function visualModeNavigation(event) {
 function initializeSelection() {
 	window.textInput.focus();
 	const range = document.getSelection().getRangeAt(0);
-	if (!visualMode) {
+	if (!viMode) {
 		range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
 		range.collapse(false);
 	} else {
@@ -213,7 +213,13 @@ function save() {
 }
 
 function autoSave() {
-	return new Promise(r => setTimeout(r, 2048)).then(save).then(autoSave).catch(console.log);
+	return new Promise(r => setTimeout(r, 2048))
+		.then(save)
+		.then(autoSave)
+		.catch(r => {
+			window.sourceLink.style.display = 'block';
+			console.log(r)
+		});
 }
 
 load().then(autoSave);
