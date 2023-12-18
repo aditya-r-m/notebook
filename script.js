@@ -69,10 +69,6 @@ function handleKeyDown(event) {
 			while (viModeBuffer--) {
 				viModeNavigation(event);
 			}
-		} else if (event.key === "V") {
-			const range = document.getSelection().getRangeAt(0);
-			range.setStart(window.textInput.childNodes[0], 0);
-			range.setEnd(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
 		} else viModeTransition(event);
 		viModeBuffer = 0;
 		event.preventDefault();
