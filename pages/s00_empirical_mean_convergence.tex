@@ -36,8 +36,8 @@ hl|tc| 4. Hoeffding's inequalities
 Hoeffding's inequalities can result in much faster convergence compared to the plain application of Chebyshev's inequality. For a basic case, we consider a random variable \(X\) which can assume values in {1, -1} with equal probability. Applying Chebyshev's inequality on samples taken from this, we observe that probability of finding values above a lower bound is inversly proportional to the sample size.
 tc| \( P(\sum_{i=1}^n X_i \ge na) \le \frac{1}{na^2} \)
 We can analyze the same with Markov's inequality applied to scaled exponentiated version of the random variable lower bound noted above,
-tc| \( P(\sum_{i=1}^n X_i \ge na) \iff P\left(e^{\sum_{i=1}^nX_i} \ge e^{sna}\right) \)
-tc| \( P\left(e^{\sum_{i=1}^n X_i} \ge e^{sna} \right) \le \frac{E\left[e^{\sum_{i=1}^n X_i}\right]}{e^{sna}} = \left(\frac{E\left[ e^X \right]}{e^{sa}} \right)^n = \left( \frac{e^s + e^{-s}}{2e^{sa}} \right)^n \)
+tc| \( P(\sum_{i=1}^n X_i \ge na) \iff P\left(e^{s\sum_{i=1}^nX_i} \ge e^{sna}\right) \)
+tc| \( P\left(e^{s\sum_{i=1}^n X_i} \ge e^{sna} \right) \le \frac{E\left[e^{s\sum_{i=1}^n X_i}\right]}{e^{sna}} = \left(\frac{E\left[ e^sX \right]}{e^{sa}} \right)^n = \left( \frac{e^s + e^{-s}}{2e^{sa}} \right)^n \)
 The two terms of interest on the last fraction are \(\frac{e^s+e^{-s}}{2}\) and \(e^{sa}\). We can manipulate the arbitrary scaling factor to try to minimize this ratio. At \(s=0\), both of these are \(1\) with derivatives \(0,1\) respectively. Thus, we can always find values of \(s\) to make the entire expression less than \(1\) which would decay exponentially with \(n\).
 Expanding the taylor series for the numerator,
 tc| \( \frac{e^s+e^{-s}}{2} = \sum_{i=0}^\infty \frac{s^{2i}}{(2i)!} \le \sum_{i=0}^\infty \frac{\left(s^2\right)^i}{2^ii!} = \sum_{i=0}^\infty \frac{\left(\frac{s^2}{2}\right)^i}{i!} = e^\frac{s^2}{2}\)
