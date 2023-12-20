@@ -13,16 +13,16 @@ tc| \( \Rightarrow \exp\left\{ k \cdot \ln\left(\frac{n/2}{k}\right) + (n-k) \cd
 Let \(x = \frac{k - n/2}{\sqrt{n}/2}\) and approximate natural logarithm using Taylor's series,
 tc| \( \Rightarrow \exp\left\{\frac{1}{2}\left(-(n + x\sqrt{n}) \cdot \ln\left(1+\frac{x}{\sqrt{n}}\right) + -(n - x\sqrt{n}) \cdot \ln\left(1-\frac{x}{\sqrt{n}}\right) \right)\right\} \)
 tc| \( \approx \exp\left\{\frac{1}{2}\left(-(n + x\sqrt{n}) \cdot \left(\frac{x}{\sqrt{n}} - \frac{x^2}{2n}\right) + -(n - x\sqrt{n}) \cdot \left(-\frac{x}{\sqrt{n}} - \frac{x^2}{2n}\right) \right)\right\} \Rightarrow e^{-\frac{x^2}{2}} \)
-hl|tc| \( \therefore P(k) \approx e^{-\frac{x^2}{2}} \)
+hs|tc| \( \therefore P(k) \approx e^{-\frac{x^2}{2}} \)
 Note that this function is defined by the following core property,
-hl|tc| \( \frac{d}{d\alpha}f(\alpha)= -\alpha \cdot f(\alpha), \)
+hs|tc| \( \frac{d}{d\alpha}f(\alpha)= -\alpha \cdot f(\alpha), \)
 If we have non-zero mean and non-unit variance, the following generalized version holds,
-hl|tc| \( \frac{d}{d\alpha}f(\alpha)= -\frac{\alpha-\mu}{\sigma^2} \cdot f(\alpha) \)
+hs|tc| \( \frac{d}{d\alpha}f(\alpha)= -\frac{\alpha-\mu}{\sigma^2} \cdot f(\alpha) \)
 We can show that the same holds for a Binomial distribution as follows,
 tc| \( P(k+1) - P(k) = \frac{n!}{(k+1)!(n-(k+1))!} - \frac{n!}{k!(n-k)!} \)
 tc| \( \Rightarrow P(k)\left(\frac{n-k}{k+1} - 1\right) \Rightarrow P(k)\frac{n-2k-1}{k+1} \)
 tc| \( \Rightarrow P(k)\frac{n-2(n/2 + x\sqrt{n}/2)-1}{n/2 + x\sqrt{n}/2 +1} \Rightarrow -P(k)\frac{x\sqrt{n} + 1}{n/2 + x\sqrt{n}/2 + 1} \approx -\frac{x}{\sqrt{n}/2}P(k)\frac{xn/2}{xn/2} \)
-hl|tc| \( \therefore P(k+1)-P(k) \rightarrow -\frac{k-n/2}{n/4}P(k) \)
+hs|tc| \( \therefore P(k+1)-P(k) \rightarrow -\frac{k-n/2}{n/4}P(k) \)
 hl|tc| Lindeberg-Levy CLT
 The general CLT focuses on Samples taken from any probability distribution with finite mean and variance. By analysing characterstic function or moment-generating function, it can be seen that the structure approaches the Normal Distribution.
 Note that the Characterstic function of a distribution is analogous to Fourier Transform and MGF is a variant of the same which abstracts away the process of computing \(n^{th}\) moment of the distribution.
@@ -31,9 +31,9 @@ tc| \( Z_n = \sum_{i=1}^{n}\frac{X_i - \mu}{\sqrt{n}\sigma} = \sum_{i=1}^{n}\fra
 Focusing on the characterstic function of \(Z_n\),
 tc| \( \phi_{Z_n}(t) = \phi_{\sum_{i=1}^{n}Y_i/\sqrt{n}}(t) = \phi_{Y_1}(t/\sqrt{n})^n \)
 tc| \( \Rightarrow \phi_{Z_n}(t) = (1 + E[Y_1]\cdot it/\sqrt{n} - V[Y_1]\cdot t^2/2n + \epsilon)^n \)
-hl|tc| \( \phi_{Z_n}(t) \approx e^{\frac{-t^2}{2}} \)
+hs|tc| \( \phi_{Z_n}(t) \approx e^{\frac{-t^2}{2}} \)
 Focusing on the characterstic function of standard normal distribution,
-tc| \( \phi_{N(0,1)} = \int \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} e^{itx} dx = \frac{1}{\sqrt{2\pi}} \int e^{itx  - \frac{x^2}{2}} dx = \frac{1}{\sqrt{2\pi}} \int e^{-\frac{1}{2} (x^2 - 2itx + (it)^2)} dx \)
+tc| \( \phi_{N(0,1)} = \int \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} e^{itx} dx = \frac{1}{\sqrt{2\pi}} \int e^{itx - \frac{x^2}{2}} dx = \frac{1}{\sqrt{2\pi}} \int e^{-\frac{1}{2} (x^2 - 2itx + (it)^2)} dx \)
 tc| \( \Rightarrow \phi_{N(0,1)} = e^{\frac{-t^2}{2}} \frac{1}{\sqrt{2\pi}} \int e^{-\frac{1}{2} (x - it)^2} dx \)
-hl|tc| \( \phi_{N(0,1)} = e^{\frac{-t^2}{2}} \)
-hl|tc| \( \therefore Z_n \rightarrow N(0, 1) \)
+hs|tc| \( \phi_{N(0,1)} = e^{\frac{-t^2}{2}} \)
+hs|tc| \( \therefore Z_n \rightarrow N(0, 1) \)
