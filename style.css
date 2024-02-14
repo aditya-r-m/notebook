@@ -1,14 +1,20 @@
-* {
-    background: transparent;
-    color: #FFFFFF;
-    text-align: left;
-}
-
 body {
-    background-color: #3E1C43;
     text-align: center;
     padding-top: 30vh;
     padding-bottom: 50vh;
+    background-color: #202124;
+    background-color: #3E1C43;
+}
+
+* {
+    background: transparent;
+    text-align: left;
+    color: #CCCCCC;
+}
+
+.MathJax * {
+    color: #AECBFA;
+    color: #FBE1FF;
 }
 
 [data-mjx-error] {
@@ -24,17 +30,21 @@ p {
     display: inline-block;
     width: 80vw;
     margin: 10px;
-    font-size: 18px;
+    font-size: 20px;
     font-family: sans-serif;
 }
 
 span.hs {
-    font-size: 22px;
+    color: #DDDDDD;
+    font-size: 24px;
+    font-family: serif;
 }
 
 span.hl {
-    font-size: 26px;
+    color: #DDDDDD;
     margin-top: 30px;
+    font-size: 28px;
+    font-family: serif;
 }
 
 span.tc {
