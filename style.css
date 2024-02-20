@@ -34,6 +34,11 @@ p {
     font-family: sans-serif;
 }
 
+span.span-output:before {
+    content: "\200D";
+    display: inline;
+}
+
 span.hs {
     color: #DDDDDD;
     font-size: 24px;
@@ -47,13 +52,18 @@ span.hl {
     font-family: serif;
 }
 
-span.tc {
-    text-align: center;
+span.li {
+    margin: 0px;
+    margin-left: 30px;
 }
 
-span.span-output:before {
-    content: "\200D";
-    display: inline;
+span.li:before {
+    content: "\25B8";
+    margin-right: 10px;
+}
+
+span.tc {
+    text-align: center;
 }
 
 span.editing,

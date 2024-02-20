@@ -1,7 +1,7 @@
 let page = window.location.search.replace("?", "");
 if (!page) page = "s00_empirical_mean_convergence";
 
-let supportedStyles = ["hl", "hs", "tc"];
+let supportedStyles = ["hl", "hs", "li", "tc"];
 function typeset(el) {
 	for (let supportedStyle of supportedStyles) {
 		el.classList.remove(supportedStyle);
