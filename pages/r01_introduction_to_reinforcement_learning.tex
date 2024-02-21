@@ -1,0 +1,30 @@
+hl|tc| Introduction to Reinforcement Learning
+Reinforcement learning models are designed around Agent-Environment interactions. At timestep \(t\),
+li| Agent receives observation \(O_t\) and reward \(R_t\)
+li| Agent performs action \(A_t\)
+li| Environment receives action \(A_t\)
+li| Environment emits observation \(O_{t+1}\) and reward \(R_{t+1}\)
+The Agent is expected to learn optimal actions maximizing the returns,
+tc| \(G_t = \sum_{i=0}^{\infty}\gamma^i R_{t+1+i} = R_{t+1} + \gamma G_{t+1} \)
+where the discount factor \(0\le \gamma \le 1\) is used to control prioritization of short term vs long term rewards.
+The expected cumulative reward is called the value of a state,
+tc| \(v(s) = E[G_t | S_t = s] = E[R_{t+1} + \gamma v(S_{t+1}) \ | \ S_t = s] \)
+It is also possible to condition values on actions,
+tc| \(q(s, a) = E[G_t | S_t = s, A_t = a] = E[R_t + \gamma q(S_{t+1}, A_{t+1}) \ | \ S_t = s, A_t = a] \)
+The optimal value follows a similar Bellman equation,
+tc| \(v_*(s) = \max_a E[R_{t+1} + \gamma v_*(S_{t+1}) \ | \ S_t = s, A_t = a] \)
+The Agent consists of,
+li| Agent State : Constructed from the history \(H_t = O_0, A_0, R_1, .., R_t, O_t \) using state update function : \(S_{t+1} = u(S_t, A_t, R_{t+1}, O_{t+1}) \)
+li| Policy : Mapping from states to actions : deterministic \( A = \pi(S) \), stochastic \( \pi(A, S) = p(A|S) \)
+li| Value? : Approximation of value function given a policy : \(v_\pi(s) = E[R_{t+1} + \gamma v_\pi(S_{t+1}) \ | \ S_t = s, A_t \sim \pi(s) ] \)
+li| Model? : Functions to predict reward and next state : \( \ R(s, a) \approx E[R_{t+1} \ | \ S_t = s, A_t = a], P(s, a, s') \approx p(S_{t+1} = s' \ | \ S_t = s, A_t = a) \)
+Learning Value and Policy Functions allows the Agent to Predict and Control the outcomes. These can be strongly related since the optimal policy can be defined using the value function : \( \pi_*(s) = argmax_\pi (v_\pi(s)) \). In practice, it can be useful to store these functions separately - especially when our predictions are just approximations.
+The Environment state is generally invisible to the agent or may contain a lot of irrelevant information. For Fully Observable Environments, the observation contains the entire environment state.
+We call an interaction a Markov Decision Process (MDP) if \(\ p(r, s | S_t, A_t) = p(r, s | H_t, A_t) \). This means that adding more history to the agent state \(S_t\) - which is generally a compression of the former - doesn't help improve the predictions.
+For Partially Observable Environments, the environment can still be Markov, but the agent does not know it. We might still be able to construct a Markov Agent State through repeated observations in POMDP.
+Agents can be broadly classified as,
+li| Value Based : Value Function is learnt and Policy is implicit.
+li| Policy Based : Policy is learnt directly.
+li| Actor-Critic : Value Function is learnt alongside Policy and is used to update the latter in some way.
+The above categories can be further subdivided into Model-Free and Model-Based depending on whether the agents contains a model of the environment.
+Reinforcement Learning problems require Learning and Planning. All the agent state components are functions that can be represented using neural networks - though we often violate assumptions from suprvised learning such as having stationary, independent, and identically distributed random variables. Once these functions are learnt via agent-environment interaction, Planning often involves some type of agent-internal search and optimization.
