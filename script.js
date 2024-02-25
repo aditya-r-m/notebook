@@ -203,7 +203,7 @@ function save() {
 		},
 		body: Array.from(
 			document.getElementsByClassName('span-input'))
-			.map(x => x.innerHTML)
+			.map(x => x.innerText)
 			.join('\n')
 	}).then(res => res.ok ? Promise.resolve() : Promise.reject(res));
 }
