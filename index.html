@@ -17,6 +17,31 @@
         https://stackoverflow.com/a/21957017/5664000  -->
     <!-- <script id="MathJax-script" src="http://localhost:8000/mathjax/tex-chtml.js" defer></script> -->
     <script src="script.js" defer></script>
+    <script type="module">
+        import { Octokit } from "https://esm.sh/octokit";
+        // Github commits can be pushed directly from browser console using the following function.
+	window.commit = (token, user, page, name, email, message) => {
+            // Octokit.js
+            // https://github.com/octokit/core.js#readme
+            const octokit = new Octokit({
+                auth: token
+            });
+            octokit.request(`PUT /repos/${user}/notebook/contents/pages/${page}.tex`, {
+                message: message,
+                committer: {
+                    name: name,
+                    email: email
+                },
+                content: btoa(Array.from(
+                    document.getElementsByClassName('span-input'))
+                    .map(x => x.innerText)
+                    .join('\n')),
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            }).then(_ => console.log('commit successful')).catch(err => console.log(err));
+        };
+    </script>
 </head>
 
 <body>
