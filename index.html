@@ -38,10 +38,10 @@
                         name: name,
                         email: email
                     },
-                    content: btoa(Array.from(
+                    content: btoa(unescape(encodeURIComponent(Array.from(
                         document.getElementsByClassName('span-input'))
                         .map(x => x.innerText)
-                        .join('\n')),
+                        .join('\n')))),
                     sha: response.data.sha,
                     headers
                 })).then(_ => console.log('commit successful')).catch(err => console.log(err));
