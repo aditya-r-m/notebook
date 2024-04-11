@@ -57,7 +57,8 @@ function handleKeyDown(event) {
 		range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
 		event.preventDefault();
 		return false;
-	} else if (viMode && !event.shiftKey) {
+	} else if (viMode) {
+		if (event.key == "I" || event.key == "J") return;
 		if (event.key >= "0" && event.key <= "9") {
 			viModeBuffer *= 10;
 			viModeBuffer += parseInt(event.key);
