@@ -218,4 +218,4 @@ function autoSave() {
 		});
 }
 
-load().then(autoSave);
+load(); //.then(autoSave);
