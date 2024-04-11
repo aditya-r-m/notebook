@@ -17,10 +17,13 @@ tc| \( f(p) - f(q) = \int_q^p f'(x) \ dx = \int_q^p \frac{p - x}{x (1 - x)} dx \
 The last inequality stems from the fact that parabola \( x (1-x) \) stays below \( \frac{1}{4} \) for all real numbers. This can be easily checked with the derivatives of the same. We now have,
 tc| \( f(p) - f(q) \ge 4 \left[ \frac{-(p-x)^2}{2} \right]_q^p = 2 (p - q)^2 \)
 The above property holds for binary random variables defined over any subset of the domain \( \Omega \). Considering the subset \( S \subset \Omega \) which gives us TV distance Supremum, we get the following,
-tc| \( D_{KL}(P(S), Q(S)) \ge  2(P(S)-Q(S))^2 = 2 \ \delta(P,Q)^2 \)
+tc| \( D_{KL}(P(S) \ || \ Q(S)) \ge  2(P(S)-Q(S))^2 = 2 \ \delta(P,Q)^2 \)
 The last part of the proof involves the Data Processing Inequality. This is a property all meaningful divergence measurements are supposed to have. Intuitively, it states that post-processing a distribution can not increase the information content. For the context above, it states that KL divergence over a subset of the domain must be less than or equal to the divergence for the full domain.
-To show Data Processing Inequality for KL divergence, we first build Log-sum inequality from Jensen's inequality, & apply it to KL Divergence definition.
+To show Data Processing Inequality for KL divergence, we first build Log-sum inequality from Jensen's inequality,
 hs| Jensen's Inequality : \( E[f(X)] \ge f(E[X]) \) where \(f\) is a convex function and \(E\) is a convex combination.
 hs| Log sum Inequality : For \(a_i \ge 0\), \(b_i \ge 0\), \(a = \sum_i a_i\), \(b = \sum_i b_i\), we obtain the following result,
 tc| \( \sum_i a_i \log \left( \frac{a_i}{b_i} \right) = b \sum_i \frac{b_i}{b} \left( \frac{a_i}{b_i} \log \left( \frac{a_i}{b_i} \right) \right) \ge b \left( \left( \sum_i \frac{b_i}{b} \frac{a_i}{b_i} \right) \log \left( \sum_i \frac{b_i}{b} \frac{a_i}{b_i} \right) \right) = a \log \left( \frac{a}{b} \right) \)
-TODO: KL divergence Data Processing Inequality from Log sum Inequality
+Applying this to KL divergence of post-processed distributions \(P\) & \(Q\), we get the following,
+tc| \( \begin{align} D_{KL}(W \cdot P \ || \ W \cdot Q) & = \sum_y \left(\sum_x W(y|x) P(x) \right) \log \left( \frac{ \sum_x W(y|x) P(x) }{ \sum_x W(y|x) Q(x) } \right) \\ & \le \left( \sum_y \sum_x W(y|x) P(x) \right) \log \left( \frac{ \sum_y \sum_x W(y|x) P(x) }{ \sum_y \sum_x W(y|x) Q(x) } \right) \\ & = \sum_x P(x) \log \left( \frac{P(x)}{Q(x)} \right) = D_{KL}(P \ || \ Q) \end{align} \)
+This completes the proof for Pinsker's Inequality with the comparison over TV distance supremum \(S \subset \Omega\),
+hl|tc| \( D_{KL}(P \ || \ Q) \ge D_{KL}( P(S) \ || \ Q(S)) \ge 2(P(S)) - Q(S))^2 = 2 \ \delta(P, Q)^2 \)
