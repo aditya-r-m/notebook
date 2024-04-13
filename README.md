@@ -10,7 +10,7 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 
 The following convenience function available in browser console can be used to directly commit changes to the notebook repository pages on github,
 ```js
-commit(personal_access_token, github_user_name, notebook_page, committer_name, committer_email, commit_message);
+commit(personal_access_token, github_user_name, github_repository, notebook_page, committer_name, committer_email, commit_message);
 ```
 
 
