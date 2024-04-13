@@ -20,7 +20,7 @@
     <script type="module">
         import { Octokit } from "https://esm.sh/octokit";
         // Github commits can be pushed directly from browser console using the following function.
-        window.commit = (token, user, page, name, email, message) => {
+        window.commit = (token, user, repository, page, name, email, message) => {
             // Octokit.js
             // https://github.com/octokit/core.js#readme
             const octokit = new Octokit({
@@ -29,10 +29,10 @@
             const headers = {
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            octokit.request(`GET /repos/${user}/notebook/contents/pages/${page}.tex`, {
+            octokit.request(`GET /repos/${user}/${repository}/contents/pages/${page}.tex`, {
                 headers
             }).catch(error => { data: { } }).then(response =>
-                octokit.request(`PUT /repos/${user}/notebook/contents/pages/${page}.tex`, {
+                octokit.request(`PUT /repos/${user}/${repository}/contents/pages/${page}.tex`, {
                     message: message,
                     committer: {
                         name: name,
