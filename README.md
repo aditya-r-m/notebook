@@ -20,8 +20,10 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | l | VIM | Scroll right |
 | ^ | VIM | Move to line start |
 | $ | VIM | Move to line end |
-| b | VIM | Move to previous word start |
-| e | VIM | Move to current word end |
+| p | VIM | Move to sentence start |
+| n | VIM | Move to sentence end |
+| b | VIM | Move to word start |
+| e | VIM | Move to word end |
 | [0-9]+ | VIM | Repeat the VIM command that follows |
 
 The following convenience function available in browser console can be used to directly commit changes to the notebook repository pages on github,

@@ -101,6 +101,9 @@ function viModeTransition(event) {
 
 function viModeNavigation(event) {
 	const range = document.getSelection().getRangeAt(0);
+	const atLineBreak = () => window.textInput.innerText[range.startOffset] === '.'
+		|| (window.textInput.innerText[range.startOffset] === '\\'
+			&& window.textInput.innerText[range.startOffset + 1] === '\\');
 	switch (event.key) {
 		case 'h':
 			range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
@@ -117,6 +120,18 @@ function viModeNavigation(event) {
 		case '$':
 			range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length - 1);
 			range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+			break;
+		case 'p':
+			do {
+				range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
+				range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+			} while (range.startOffset && !atLineBreak());
+			break;
+		case 'n':
+			do {
+				range.setStart(window.textInput.childNodes[0], Math.min(range.startOffset + 1, window.textInput.childNodes[0].length - 1));
+				range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+			} while (range.startOffset < window.textInput.childNodes[0].length - 1 && !atLineBreak());
 			break;
 		case 'b':
 			range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
