@@ -41,6 +41,6 @@ The uncertainty should be low for actions with higher sample count \( N_t(a) \).
 From Hoeffding's Inequality, we know that for sample mean \( \bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \) of random variables \(X_i\) in range \( [0,1] \) & true mean \( \mu = E[X] \), the following relationship holds : \( p( \bar{X}_n + u \le \mu) \le e^{-2nu^2} \)
 By symmetry, we can also flip the equation around as follows : \( p( \bar{X}_n - u \ge \mu) \le e^{-2nu^2} \)
 Substituting the values & setting the desired probabilty as \(\frac{1}{t}\) & using a hyper-parameter \(c\), we get,
-tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = argmax_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
+hl|tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = argmax_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
 This ensures that we keep exploring, but in a very controlled manner.
 TODO: UCB regret analysis
