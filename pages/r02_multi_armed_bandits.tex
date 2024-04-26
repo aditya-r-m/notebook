@@ -35,6 +35,12 @@ hl|tc| \( \pi(a) = \frac{e^{H_t(a)}}{\sum_x e^{H_t(x)}} \implies \frac{\delta \p
 hl|tc| \( \therefore H_{t+1}(a) = H_t(a) + \alpha R_t \left[I(A_t=a) - \frac{e^{H_t(a)}}{\sum_x e^{H_t(x)}}\right] \)
 Note that the total expected regret with this approach can still be linear in the number of time-steps, because the iterations may converge towards a local optimum with non-zero regret.
 We can subtract a baseline \(b\) from the Reward \(R_t\) to reduce the variance in the updates. This does not impact the gradient definition above, since \( \nabla_\theta \sum_a \pi_\theta(a) \ b = 0 \) as long as \(b\) does not depend on action \(a\). A natural baseline such as the average reward \( \frac{1}{t} \sum_{i=1}^t R_i \) can make the iterations converge significantly faster.
-TODO : Lai-Robbins lower bound
-TODO : UCB algorithm & analysis
- 
+hs| Upper Confidence Bounds
+Estimate upper confidence \(U_t(a)\) for each action value, such that \( q(a) \le Q_t(a) + U_t(a) \) with high confidence. We select actions maximizing this Upper Confidence Bound (UCB) : \( a_t = argmax_{a \in A} \ Q_t(a) + U_t(a) \)
+The uncertainty should be low for actions with higher sample count \( N_t(a) \). This ensures that the actions selected more should either have higher value estimates or higher uncertainty.
+From Hoeffding's Inequality, we know that for sample mean \( \bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \) of random variables \(X_i\) in range \( [0,1] \) & true mean \( \mu = E[X] \), the following relationship holds : \( p( \bar{X}_n + u \le \mu) \le e^{-2nu^2} \)
+By symmetry, we can also flip the equation around as follows : \( p( \bar{X}_n - u \ge \mu) \le e^{-2nu^2} \)
+Substituting the values & setting the desired probabilty as \(\frac{1}{t}\) & using a hyper-parameter \(c\), we get,
+tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = argmax_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
+This ensures that we keep exploring, but in a very controlled manner.
+TODO: UCB regret analysis
