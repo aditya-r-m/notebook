@@ -49,4 +49,5 @@ Since we are considering UCB style algorithms, we have : \( a_t = \text{argmax}_
 Assume that the constraint holds for action \(a\) at some timestep \(m \le t \) : \( N_m(a) \Delta_a \le x_a \log m \le x_a \log t \)
 Considering \( m \le t \) as the last such timestamp, we have : \( N_n(a) \Delta_a > x_a \log n \ , \ \forall n \in \{ m+1, .., t \} \)
 The goal is to derive an approach where the regret grows slowly for these time windows.
-<TODO>
+tc| \( \begin{aligned} E[N_t(a)] &= E\left[\sum_{n=1}^t I(A_n=a) \right] \\ &\le x_a \frac{\log t}{ \Delta_a } + \sum_{n=m+1}^t E\left[ I(A_n = a) \right] \\ &= x_a \frac{\log t}{ \Delta_a } + \sum_{n=m+1}^t P(A_n =a \ | \ N_n(a) \Delta_a > x_a \log n ) \end{aligned} \)
+ 
