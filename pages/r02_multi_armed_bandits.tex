@@ -41,6 +41,12 @@ The uncertainty should be low for actions with higher sample count \( N_t(a) \).
 From Hoeffding's Inequality, we know that for sample mean \( \bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \) of random variables \(X_i\) in range \( [0,1] \) & true mean \( \mu = E[X] \), the following relationship holds : \( p( \bar{X}_n + u \le \mu) \le e^{-2nu^2} \)
 By symmetry, we can also flip the equation around as follows : \( p( \bar{X}_n - u \ge \mu) \le e^{-2nu^2} \)
 Substituting the values & setting the desired probabilty as \(\frac{1}{t}\) & using a hyper-parameter \(c\), we get,
-hl|tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = argmax_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
-This ensures that we keep exploring, but in a very controlled manner.
-TODO: UCB regret analysis
+hl|tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = \text{argmax}_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
+This ensures that we keep exploring, but in a very controlled manner. The derivation & analysis of UCB is as follows,
+Let total regret : \( L_t = \sum_a N_t(a) \Delta_a \)
+Let's say that we want : \( N_t(a) \Delta_a \le x_a \log t \ , \ \forall a \neq a^* \) for some constants \( x_a \)
+Since we are considering UCB style algorithms, we have : \( a_t = \text{argmax}_{a \in A} Q_t(a) + U_t(a) \)
+Assume that the constraint holds for action \(a\) at some timestep \(m \le t \) : \( N_m(a) \Delta_a \le x_a \log m \le x_a \log t \)
+Considering \( m \le t \) as the last such timestamp, we have : \( N_n(a) \Delta_a > x_a \log n \ , \ \forall n \in \{ m+1, .., t \} \)
+The goal is to derive an approach where the regret grows slowly for these time windows.
+<TODO>
