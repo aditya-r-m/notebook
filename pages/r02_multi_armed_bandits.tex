@@ -41,7 +41,7 @@ The uncertainty should be low for actions with higher sample count \( N_t(a) \).
 From Hoeffding's Inequality, we know that for sample mean \( \bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \) of random variables \(X_i\) in range \( [0,1] \) & true mean \( \mu = E[X] \), the following relationship holds : \( p( \bar{X}_n + u \le \mu) \le e^{-2nu^2} \)
 By symmetry, we can also flip the equation around as follows : \( p( \bar{X}_n - u \ge \mu) \le e^{-2nu^2} \)
 Substituting the values & setting the desired probabilty as \(\frac{1}{t}\) & using a hyper-parameter \(c\), we get,
-hl|tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = \text{argmax}_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
+hs|tc| \( e^{-2 N_t(a) \ U_t(a)^2} = \frac{1}{t} \implies U_t(a) = \sqrt{\frac{\log t}{2N_t(a)}} \implies a_t = \text{argmax}_{a \in A} \ Q_t(a) + c \sqrt{\frac{\log t}{ 2N_t(a) }} \)
 This ensures that we keep exploring, but in a very controlled manner. The derivation & analysis of UCB is as follows,
 Let total regret : \( L_t = \sum_a N_t(a) \Delta_a \)
 Let's say that we want : \( N_t(a) \Delta_a \le x_a \log t \ , \ \forall a \neq a^* \) for some constants \( x_a \)
@@ -50,4 +50,18 @@ Assume that the constraint holds for action \(a\) at some timestep \(m \le t \) 
 Considering \( m \le t \) as the last such timestamp, we have : \( N_n(a) \Delta_a > x_a \log n \ , \ \forall n \in \{ m+1, .., t \} \)
 The goal is to derive an approach where the regret grows slowly for these time windows.
 tc| \( \begin{aligned} E[N_t(a)] &= E\left[\sum_{n=1}^t I(A_n=a) \right] \\ &\le x_a \frac{\log t}{ \Delta_a } + \sum_{n=m+1}^t E\left[ I(A_n = a) \right] \\ &= x_a \frac{\log t}{ \Delta_a } + \sum_{n=m+1}^t P(A_n =a \ | \ N_n(a) \Delta_a > x_a \log n ) \end{aligned} \)
- 
+tc| \( P(A_n = a \ | \ N_n(a) \Delta_a > x_a \log n) \le P(Q_n(a) + U_n(a) \ge Q_n(a^*)  U_n(a^*)) \)
+Simplifying the notations, we are interested in \( P(Q + U \ge Q^* + U^*) \), we can condition this on two cases - one where the upper bound holds for optimal action, & one where it does not.
+tc| \( \begin{align} P(Q + U \ge Q^* + U^*) &= P(Q + U \ge Q^* + U^* \ | \ Q^* + U^* \le q^*) \ P(Q^* + U^* \le q^*) \\ &+ P(Q + U \ge Q^* + U^* \ | \ Q^* + U^* > q^*) \ P(Q^* + U^* > q^*) \end{align} \)
+tc| \( \implies P(Q + U \ge Q^* + U^*) \le P(Q^* + U^* \le q^*) + P(Q + U \ge q^*)  \)
+Applying Hoeffding's Inequality on the first term, we get \( P(Q^* + U^* \le q^*) \le e^{-N^* U^{*2} } \)
+To have this overall summation over time steps to be logarithmic, we can define \(U\) in such a way that \( P(Q^* + U^* \le q^*) \le \frac{1}{n} \), since \( \sum_{n=1}^t \frac{1}{n} \le \log t + 1 \),
+hs|tc| \( e^{- NU^2 } = \frac{1}{n} \implies U = \sqrt{ \frac{ \log n }{ N } } \)
+Focusing on the second term, we can rewrite it purely with attributes of action \(a\) at time step \(n\),
+tc| \( P(Q + U \ge q^*) = P(Q + U \ge q + \Delta) \)
+We can tune the parameter \(x = \frac{4}{\Delta}\) in the constraint \( N \Delta > x \log n \) to achieve \( \Delta > 2 U \),
+tc| \( N \Delta > x \log n \implies \Delta > x U^2 \implies \Delta^2 = 4U^2 \implies \Delta > 2U \)
+With this parameter substitution, the previous equation leads to the following,
+tc| \( P(Q - U \ge q) \le e^{-\frac{NU^2}{2}} = \frac{1}{n} \)
+This summation also leads to an identical logarithmic bound as above. Putting this all together,
+hs|tc| \( E[N_t(a)] \le \frac{4 \log t}{\Delta_a^2} + 2(\log t + 1) \)
