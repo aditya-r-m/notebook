@@ -7,9 +7,9 @@ The goal of maximizing the cumulative reward can equivalently be stated as minim
 The following algorithms will be explored in the rest of this document,
 li| Greedy
 li| \(\epsilon\)-Greedy
+li| Policy Gradients
 li| UCB
-li| Thompson sampling
-li| Policy gradients
+li| Thompson Sampling
 The first 3 of the above algorithms realy on Action Value Estimates. A simple estimate can be defined as the average of all sampled Action Values.
 li| Indicator function of Action \(a\) : \( I(A_i = a) \) as \( I(true) = 1 \) and \( I(false) = 0 \)
 li| Count of Action \(a\) : \( N_t(a) = \sum_{i=1}^t I(A_i = a) \)
@@ -18,24 +18,24 @@ The Sample Average can be updated incrementally,
 tc| \( Q_t(a) = \frac{1}{N_{t}(a)} (N_{t-1}(a) \ Q_{t-1}(a) \ + \ I(A_t = a) \ R_t ) \)
 tc| \( = \begin{cases} \ Q_t(a) = Q_{t-1}(a) + \frac{1}{N_t(a)}(R_t - Q_{t-1}(a)) & \text{if } A_t=a \\ \ Q_t(a) = Q_{t-1}(a) & \text{otherwise.} \end{cases} \)
 Note that in the last equation, the ratio \( \alpha_t = \frac{1}{N_t(a)} \) is the learning rate that controls step sizes. Different configurations are possible for this ratio for learning the Value Estimates, for example, a constant value will lead to tracking instead of averaging.
-hs| Greedy Policy
+hl| Greedy Policy
 Select the action with the largest Value Estimate : \( \pi_t(a) = I(argmax_{a_i} \ Q_t(a_i) = a) \)
 The regret for Greedy Policy grows linearly because the initial Action Value Estimates can deviate significantly from true Action Values, causing Greedy Policy to fix a suboptimal action as the preferred one.
-hs| \(\epsilon\)-Greedy Policy
+hl| \(\epsilon\)-Greedy Policy
 Select random action with a small probability and the action with the largest Value Estimate otherwise.
 tc| \( \pi(a) = \begin{cases} \ (1 - \epsilon) \ + \ \frac{\epsilon}{|A|} & argmax_{a_i} \ Q_t(a_i)=a \\ \ \frac{\epsilon}{|A|} & \text{otherwise.} \end{cases} \)
 The regret for \(\epsilon\)-Greedy Policy with constant \(\epsilon\) grows linearly, since sub-optimal actions will be chosen with a static probability.
-hs| Policy Gradients
+hl| Policy Gradients
 Policy Gradient ascent approach requires a policy function definition \(\pi_\theta(a)\) with parameters \(\theta\). These parameters are not necessarily equal to action values, but we update these in a manner that prioritizes actions with higher rewards. To update the policy, we compute the rate of change of expected reward w.r.t. \(\theta\), and move the parameters in the direction where reward growth is the steepest.
 tc| \( \begin{aligned} \nabla_\theta E[R_t | \pi_\theta] &= \nabla_\theta \sum_a \pi_\theta(a) \ q(a) \\ &= \sum_a q(a) \ \pi_\theta(a) \frac{\nabla_\theta \pi_\theta(a)}{\pi_\theta(a)} \\ &= E\left[R_t \ \frac{\nabla_\theta \pi_\theta(a)}{\pi_\theta(a)} \right] = E\left[ R_t \ \nabla_\theta \log(\pi_\theta(a)) \right] \end{aligned} \)
 The intuition behind the division by \(\pi_\theta(a)\) in the last line is as follows : The Stochastic Gradient ascent requires policy correction by \(\sum_a q(a) \ \nabla_\theta \pi_\theta(a) \). Since we do not know the true action values \(q(a)\), we must sample rewards to estimate the correction term as we take actions using the same policy \(\pi_\theta(a)\). This iterative correction step occurs in a non-uniform way over the action set depending on the existing policy. Therefore, diving the current correction term by the probability of the current action being chosen results in an overall uniform correction over the action set.
-hl|tc| \( \theta_{t+1} = \theta_t + \alpha R_t \ \nabla_\theta \log(\pi_\theta(A_t)) \)
+hs|tc| \( \theta_{t+1} = \theta_t + \alpha R_t \ \nabla_\theta \log(\pi_\theta(A_t)) \)
 We can define a softmax policy using parameters \(H_t(a)\) as follows, where the iteration guarantees that preferences for actions with higher rewards increase due to larger \(R_t\) for the positive case and smaller \(R_t\) for the negative case.
-hl|tc| \( \pi(a) = \frac{e^{H_t(a)}}{\sum_x e^{H_t(x)}} \implies \frac{\delta \pi(A_t)}{\delta H_t(a)} = \begin{cases} \pi(a) \ \cdot \ (1 - \pi(a)), & A_t=a \\ - \pi(a)^2, & otherwise \end{cases} \)
-hl|tc| \( \therefore H_{t+1}(a) = H_t(a) + \alpha R_t \left[I(A_t=a) - \frac{e^{H_t(a)}}{\sum_x e^{H_t(x)}}\right] \)
+hs|tc| \( \pi(a) = \frac{e^{H_t(a)}}{\sum_x e^{H_t(x)}} \implies \frac{\delta \pi(A_t)}{\delta H_t(a)} = \begin{cases} \pi(a) \ \cdot \ (1 - \pi(a)), & A_t=a \\ - \pi(a)^2, & otherwise \end{cases} \)
+hs|tc| \( \therefore H_{t+1}(a) = H_t(a) + \alpha R_t \left[I(A_t=a) - \frac{e^{H_t(a)}}{\sum_x e^{H_t(x)}}\right] \)
 Note that the total expected regret with this approach can still be linear in the number of time-steps, because the iterations may converge towards a local optimum with non-zero regret.
 We can subtract a baseline \(b\) from the Reward \(R_t\) to reduce the variance in the updates. This does not impact the gradient definition above, since \( \nabla_\theta \sum_a \pi_\theta(a) \ b = 0 \) as long as \(b\) does not depend on action \(a\). A natural baseline such as the average reward \( \frac{1}{t} \sum_{i=1}^t R_i \) can make the iterations converge significantly faster.
-hs| Upper Confidence Bounds
+hl| Upper Confidence Bounds
 Estimate upper confidence \(U_t(a)\) for each action value, such that \( q(a) \le Q_t(a) + U_t(a) \) with high confidence. We select actions maximizing this Upper Confidence Bound (UCB) : \( a_t = argmax_{a \in A} \ Q_t(a) + U_t(a) \)
 The uncertainty should be low for actions with higher sample count \( N_t(a) \). This ensures that the actions selected more should either have higher value estimates or higher uncertainty.
 From Hoeffding's Inequality, we know that for sample mean \( \bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \) of random variables \(X_i\) in range \( [0,1] \) & true mean \( \mu = E[X] \), the following relationship holds : \( p( \bar{X}_n + u \le \mu) \le e^{-2nu^2} \)
@@ -64,4 +64,9 @@ tc| \( N \Delta > x \log n \implies \Delta > x U^2 \implies \Delta^2 = 4U^2 \imp
 With this parameter substitution, the previous equation leads to the following,
 tc| \( P(Q - U \ge q) \le e^{-\frac{NU^2}{2}} = \frac{1}{n} \)
 This summation also leads to an identical logarithmic bound as above. Putting this all together,
-hs|tc| \( \forall a \neq a^*, \ \ E[N_t(a)] \le \frac{4 \log t}{\Delta_a^2} + 2(\log t + 1) \)
+hs|tc| \( E[N_t(a)] \le \frac{4 \log t}{\Delta_a^2} + 2(\log t + 1) \)
+hl| Bayesian Bandits
+With a Bayesian approach, we can model our belief that the expected value for an action \(a\) is equal to some value \(x\) i.e. \(q(a) = x\). For one example, we can model \( p(q(a) \ | \ \theta_t) \) with parameters \(\theta_t\) containing mean & variance of Gaussian belief ditributions. This allows us to inject rich prior knowledge \(\theta_0\) and use posterior belief to guide exploration.
+Consider Bernoulli reward distirbution \( R_t \in {0, 1} \), we can set the prior for each action as uniform distribution over \([0,1]\) & use Beta distribution to model the updates : \( Beta(x_a, y_a), \ x_a=y_a=1, \ x_{A_t} \leftarrow x_{A_t} + (1 - R_t), \ y_{A_t} \leftarrow y_{A_t} + R_t \)
+We can estimate Upper Confidence values from the posterior by ordering actions on the basis of values which are some standard deviations above the mean : \( \text{argmax}_a Q_t(a) + c \sigma(a)  \). This is the same principle that optimizes values against uncertainty, differing from UCB in that we model the full distribution instead of relying simply on Hoeffding's inequality.
+ 
