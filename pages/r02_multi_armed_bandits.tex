@@ -65,8 +65,14 @@ With this parameter substitution, the previous equation leads to the following,
 tc| \( P(Q - U \ge q) \le e^{-\frac{NU^2}{2}} = \frac{1}{n} \)
 This summation also leads to an identical logarithmic bound as above. Putting this all together,
 hs|tc| \( E[N_t(a)] \le \frac{4 \log t}{\Delta_a^2} + 2(\log t + 1) \)
-hl| Bayesian Bandits
+hl| Bayesian Bandits & Thompson Sampling
 With a Bayesian approach, we can model our belief that the expected value for an action \(a\) is equal to some value \(x\) i.e. \(q(a) = x\). For one example, we can model \( p(q(a) \ | \ \theta_t) \) with parameters \(\theta_t\) containing mean & variance of Gaussian belief ditributions. This allows us to inject rich prior knowledge \(\theta_0\) and use posterior belief to guide exploration.
 Consider Bernoulli reward distirbution \( R_t \in {0, 1} \), we can set the prior for each action as uniform distribution over \([0,1]\) & use Beta distribution to model the updates : \( Beta(x_a, y_a), \ x_a=y_a=1, \ x_{A_t} \leftarrow x_{A_t} + (1 - R_t), \ y_{A_t} \leftarrow y_{A_t} + R_t \)
 We can estimate Upper Confidence values from the posterior by ordering actions on the basis of values which are some standard deviations above the mean : \( \text{argmax}_a Q_t(a) + c \sigma(a)  \). This is the same principle that optimizes values against uncertainty, differing from UCB in that we model the full distribution instead of relying simply on Hoeffding's inequality.
- 
+Thompson sampling relies on probability matching : Select action \(a\) according to our belief that \(a\) is optimal. This probability also depends on both the estimated values & the uncertainty of \(q(a)\). This algorithm also has been proven to exhibit logarithmic regret growth.
+hs|tc| \( \pi_t(a) = p(q(a) = \max_{a'} q(a') \ | \ H_{t-1}) \)
+This policy may be difficult to compute analytically, but can be computed numerically.
+li| Sample  \( Q_t(a) \sim p(q(a)), \ \forall a \)
+li| Select action maximizing the sample, \( A_t = \text{argmax}_a Q_t(a) \)
+As can be seen from the following equation, this is sample based probability matching approach,
+hs|tc| \( \pi_t(a) = E[I(Q_t(a) = \max_{a'} Q_t(a'))] = p(q(a) = \max_{a'} q(a')) \)
