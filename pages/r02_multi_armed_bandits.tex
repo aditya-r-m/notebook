@@ -76,3 +76,5 @@ li| Sample  \( Q_t(a) \sim p(q(a)), \ \forall a \)
 li| Select action maximizing the sample, \( A_t = \text{argmax}_a Q_t(a) \)
 As can be seen from the following equation, this is sample based probability matching approach,
 hs|tc| \( \pi_t(a) = E[I(Q_t(a) = \max_{a'} Q_t(a'))] = p(q(a) = \max_{a'} q(a')) \)
+For a concrete example contrasting these approaches, consider actions \( \{ a_0, a_1 \} \) with \( A_0 = a_0, A_1 = a_1 \) and \( R_0 = 0, R_1 = 1 \). The value of \( \pi_{1}(a_0) \) with Greedy & \(\epsilon\)-Greedy approaches will be \( 0 \) & \( \epsilon/2 \) respectively. For UCB, this value will be \( 0 \) given that the uncertainty values are the same but the action value samples prefer \( a_1 \). For Thompson Sampling with Beta Distribution, we can compute this value as follows,
+tc| \( \int_0^1 (2 - 2x) \int_0^x 2y \ dy \ dx = 2 \int_0^1 (x^2 - x^3) \ dx = \frac{1}{6} \)
