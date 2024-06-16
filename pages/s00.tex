@@ -1,0 +1,45 @@
+hl|tc| 1. Mean and Variance
+The Mean \(E[X]\) and Variance \(V[X]\) are numbers that measure the central value and spread of the distribution of a given random variable \(X\).
+tc| \(E[X]=\sum_x xP(X=x)\)
+tc| \(V[X] = \sum_x (x - E[X])^2 P(X=x) = E[(X-E[X])^2] = E[X^2] - E[X]^2 \)
+Given two numbers \((a, b),\) we can compute (mean, variance) of the scaled and translated random variable \(aX+b\) as follows,
+tc| \(E[aX+b] = aE[X]+b\)
+tc| \(V[aX+b] = E[(aX+b-E[aX+b])^2] = E[a^2(X-E[X])^2] = a^2V[x]\)
+Given two random variables \(X\) and \(Y\), the expectation and variance of \(X+Y\) can be computed with the same basic definitions as well,
+tc| \( E[X+Y] = \sum_x \sum_y P(X=x) P(Y=y) (x+y)\)
+tc| \( = \sum_x P(X=x) \sum_y P(Y=y) (x+y) \)
+tc| \( = \sum_x P(X=x) \{x + E[Y]\} = E[X] + E[Y] \)
+tc| \( V[X+Y] = E[(X+Y - E[X+Y])^2] = E[((X-E[X])+(Y-E[Y]))^2] \)
+tc| \(= (V[X] + V[Y]) + 2E[(X-E[X])(Y-E[Y])] \)
+If the random variables are independent, the covariance term in the variance of summation is zero, and the variance of the sum is the sum of varaince values. Note that variance scales quadratically when a random variable is scaled, but scales linearly when independent copies of the random variable are added to each other. The intuition behind this distinction is that when adding independent identical copies of a random variable, we allow destructive interference in the result which reduces the overall spread. The same does not happen with simple scaling.
+We can also simplify these properties for the product of the given random variables assuming independence as follows,
+tc| \( E[XY] = \sum_x \sum_y P(X=x)P(Y=y) xy = \sum_x P(X=x)x \sum_y P(Y=y)y = E[X]E[Y] \)
+tc| \( V[XY] = E\left[ (XY-E[XY])^2 \right] = E\left[X^2Y^2 + E[X]^2 E[Y]^2 - 2XYE[X]E[Y] \right] = E[X^2]E[Y^2] - E[X]^2E[Y]^2 \)
+tc| \( V[X]V[Y] = E\left[(X-E[X])^2(Y-E[Y])^2 \right] = E[X^2]E[Y^2] - E[X]^2E[Y^2] - E[X^2]E[Y]^2 + E[X]^2E[Y]^2 \)
+Using the expansions of \(V[XY]\) and \(V[X]V[Y]\) above, we can observe the following,
+tc| \( V[XY] = V[X]V[Y] + E[X^2]E[Y]^2 + E[X]^2E[Y^2] - 2E[X]^2E[Y]^2 \)
+tc| \( V[XY] = V[X]V[Y] + V[X]E[Y]^2 + V[Y]E[X]^2 \)
+hl|tc| 2. Deviation Bounds
+Chebyshev and Markov's inequalities provide upper bound on probabily of getting results at least as extreme as a given lower bound. Markov's inequality applies to only non-negative random variables, and is a statement in terms of mean. Chebyshev's inequality does not assume non-negative valued variable, and is a statement in terms of the variance of the distribution.
+Let \(X\) be a non-negative random variable with mean \(\mu=E[X]\), and a given positive lower bound \(a\). Proof sketch of Markov's inequality is as follows,
+tc| \( \mu = \sum_x xP(X=x) \ge \sum_{x\ge a}xP(X=x) \ge \sum_{x\ge a} aP(X=x) \implies P(X\ge a) \le \frac{\mu}{a} \)
+Similarly, Let \(X\) be a random variable with mean \(\mu=E[X]\), variance \(\sigma=V[X]\), and a given positive lower bound \(a\). Proof sketch of Chebyshev's inequality is as follows,
+tc| \( \sigma^2 = \sum_x (x - \mu)^2 P(X=x) \ge \sum_{|x-\mu| \ge a} (x - \mu)^2 P(X=x) \ge \sum_{|x-\mu|} a^2 P(X=x) \implies P(|x - \mu| \ge a) \le \frac{\sigma^2}{a^2} \)
+hl|tc| 3. Law of Large Numbers
+Given samples taken from inpendent identical copies of a random variable - the law of large number states that as sample size grows, the sample mean converges to the mean of the underlying distribution in a probabilistic manner. We can prove [weak] law of large numbers using Chebyshev's inequality.
+Let \(X_1,X_2,..,X_n\) be independent identical copies of random variable \(X\) with mean \(\mu=E[X]\) and variance \(\sigma^2=V[X]\). We are interested in the properties of the distribution of sample mean \(\ \bar{X} = \frac{\sum_{i=1}^n X_i}{n} \).
+tc| \( E[\bar{X}] = E \left[\frac{\sum_{i=1}^nX_i}{n} \right] = \frac{1}{n} E\left[\sum_{i=1}^n X_i \right] = \frac{1}{n} n\mu = \mu \)
+tc| \( V[\bar{X}] = V\left[\frac{ \sum_{i=1}^n X_i}{n} \right] = \frac{1}{n^2} V\left[\sum_{i=1}^n X_i \right] = \frac{1}{n^2} n\sigma^2 = \frac{\sigma^2}{n} \)
+We can already observe that sampling results converge to a degenerate distribution focused on the mean of the underlying variable with zero variance as the sample size grows. Chebyshev's inequality can be used to make this statement more precise.
+tc| \( P(|\bar{x} -\mu| \ge \epsilon) \le \frac{\sigma^2}{n\epsilon^2} \implies n \rightarrow \infty \Rightarrow \bar{x} \rightarrow \mu \)
+hl|tc| 4. Hoeffding's inequalities
+Hoeffding's inequalities can result in much faster convergence compared to the plain application of Chebyshev's inequality. For a basic case, we consider a random variable \(X\) which can assume values in {1, -1} with equal probability. Applying Chebyshev's inequality on samples taken from this, we observe that probability of finding values above a lower bound is inversly proportional to the sample size.
+tc| \( P(\sum_{i=1}^n X_i \ge na) \le \frac{1}{na^2} \)
+We can analyze the same with Markov's inequality applied to scaled exponentiated version of the random variable lower bound noted above,
+tc| \( P(\sum_{i=1}^n X_i \ge na) \iff P\left(e^{s\sum_{i=1}^nX_i} \ge e^{sna}\right) \)
+tc| \( P\left(e^{s\sum_{i=1}^n X_i} \ge e^{sna} \right) \le \frac{E\left[e^{s\sum_{i=1}^n X_i}\right]}{e^{sna}} = \left(\frac{E\left[ e^sX \right]}{e^{sa}} \right)^n = \left( \frac{e^s + e^{-s}}{2e^{sa}} \right)^n \)
+The two terms of interest on the last fraction are \(\frac{e^s+e^{-s}}{2}\) and \(e^{sa}\). We can manipulate the arbitrary scaling factor to try to minimize this ratio. At \(s=0\), both of these are \(1\) with derivatives \(0,1\) respectively. Thus, we can always find values of \(s\) to make the entire expression less than \(1\) which would decay exponentially with \(n\).
+Expanding the taylor series for the numerator,
+tc| \( \frac{e^s+e^{-s}}{2} = \sum_{i=0}^\infty \frac{s^{2i}}{(2i)!} \le \sum_{i=0}^\infty \frac{\left(s^2\right)^i}{2^ii!} = \sum_{i=0}^\infty \frac{\left(\frac{s^2}{2}\right)^i}{i!} = e^\frac{s^2}{2}\)
+Substituting \(s=a\) and the last result in the previous results, we obtain the desired result. The following inequality shows that for the given structure, the probability of the sample mean deviating beyond a certain bound from the random variable mean decays exponentially with sample size.
+hl|tc| \( P(\sum_{i=1}^n X_i \ge na) \le e^{\frac{-na^2}{2}} \)
