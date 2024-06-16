@@ -1,5 +1,5 @@
 let page = window.location.search.replace("?", "");
-if (!page) page = "s00_empirical_mean_convergence";
+if (!page) page = "s00";
 
 let supportedStyles = ["hl", "hs", "li", "tc"];
 function typeset(el) {
