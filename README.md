@@ -1,5 +1,5 @@
 ## Notebook
-https://aditya-r-m.github.io/notebook/?s00_empirical_mean_convergence
+https://aditya-r-m.github.io/notebook/?s00
 
 The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and github storage integration through octokit.
 
