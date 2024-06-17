@@ -190,7 +190,7 @@ function load() {
 		'method': 'GET',
 		'Content-type': 'text/plain'
 	})
-		.then(res => res.text())
+		.then(res => res.ok ? res.text() : "hl|tc|[New Page]\n")
 		.then(txt => txt.split("\n").forEach((line, i) => {
 			let s = document.createElement("span");
 			document.body.appendChild(s);
