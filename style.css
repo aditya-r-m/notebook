@@ -10,6 +10,7 @@ body {
     background: transparent;
     text-align: left;
     color: #CCCCCC;
+    scrollbar-width: none;
 }
 
 .MathJax * {
