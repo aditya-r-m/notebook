@@ -228,10 +228,7 @@ function autoSave() {
 	return new Promise(r => setTimeout(r, 2048))
 		.then(save)
 		.then(autoSave)
-		.catch(r => {
-			window.sourceLink.style.display = 'block';
-			console.log(r)
-		});
+		.catch(r => console.log(r));
 }
 
 load(); //.then(autoSave);
