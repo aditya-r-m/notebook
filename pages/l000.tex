@@ -1,3 +1,5 @@
 hl|tc|RL-000
 For a simple game of TicTacToe against an imperfect opponent, an RL agent can learn to maximize the probability of winning by estimating it as the following value function,
 tc| \( V(S_t) \leftarrow V(S_t) \ + \ \alpha[V(S_{t+1}) - V(S_t)] = (1 - \alpha) \ V(S_t) \ + \ \alpha \ V(S_{t+1}) \)
+Depending on if the learning [step size] parameter \(\alpha\) varies through the process, the policy may converge, or may keep adapting. 
+An interesting feature of RL agents is the ability to plan & look ahead without an explicit search of the possible future states. This is in contrast to standard minimax solution for such problems, where the ability to set up multi-move traps comes from evaluation of possible states deep in the game tree including assumptions about optimal play from the opponent.
