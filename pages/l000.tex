@@ -1,2 +1,3 @@
 hl|tc|RL-000
-Agents interact with the environment to optimize rewards. Rewards are generated directly by the environment in response to agent actions for some given state. The behavior of the agent is determined through a policy, which can map states to actions either deterministically or stochastically. A value function defined as some combination of immediate & long term rewards, which is estimated & re-estimated. A good policy for an agent increases this accumulated reward. The agent may also have a model of the environment which can predict how the environment states will evolve in response to some actions.
+For a simple game of TicTacToe against an imperfect opponent, an RL agent can learn to maximize the probability of winning by estimating it as the following value function,
+tc| \( V(S_t) \leftarrow V(S_t) \ + \ \alpha[V(S_{t+1}) - V(S_t)] = (1 - \alpha) \ V(S_t) \ + \ \alpha \ V(S_{t+1}) \)
