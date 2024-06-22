@@ -55,7 +55,7 @@ span.hl {
 
 span.li {
     margin: 0px;
-    margin-left: 30px;
+    padding-left: 30px;
 }
 
 span.li:before {
