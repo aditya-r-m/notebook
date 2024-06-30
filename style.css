@@ -54,13 +54,16 @@ span.hl {
 }
 
 span.li {
-    margin: 0px;
-    padding-left: 30px;
+    margin: 5px;
+    position: relative;
+    left: 30px;
 }
 
 span.li:before {
     content: "\25B8";
-    margin-right: 10px;
+    line-height: 100%;
+    position: absolute;
+    left: -20px;
 }
 
 span.tc {
