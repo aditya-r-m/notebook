@@ -72,6 +72,7 @@ span.tc {
 
 span.editing,
 p {
+    left: 0px;
     margin-top: 30px;
     padding: 2vw;
     border: 1px solid gray;
