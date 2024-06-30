@@ -14,5 +14,7 @@ li| The set of invertible \(n \times n\) metrices forms a group under matrix mul
 It is customary to denote abelian group operation by \(+\) & inverse as \( -a \) for any element \( a \in G\).
 \( \text{Proposition 2.1.} \) For a Monoid \( (M, \cdot) \), left-identity must be the same as right-identity.
 tc| \( (e' \cdot a = a \ \forall \ a \in M) \land (a \cdot e'' = a \ \forall \ a \in M) \implies e' = e' \cdot e'' = e'' \)
-\( \text{Proposition 2.2.} \) For a Monois \( (M, \cdot) \), left-inverse must be the same as right-inverse, if either exists for a given element.
+\( \text{Proposition 2.2.} \) For a Monoid \( (M, \cdot) \), left-inverse must be the same as right-inverse, if either exists for a given element.
 tc| \( (a' \cdot a = e) \land (a \cdot a'' = e) \implies a' = a' \cdot e = a' \cdot (a \cdot a'') = (a' \cdot a) \cdot a'' = e \cdot a'' = a'' \)
+\( \text{Proposition 2.3.} \) For a Monoid \( (M, \cdot) \), if we have two invertible elements \(\{a,b\}\), then \( (a \cdot b) \) is also invertible.
+tc| \( (a \cdot b) \cdot (b^{-1} \cdot a^{-1}) = a \cdot (b \cdot b^{-1}) \cdot a^{-1} = e \implies (a \cdot b)^{-1} = b^{-1} \cdot a^{-1} \)
