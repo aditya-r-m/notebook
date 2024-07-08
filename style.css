@@ -61,7 +61,6 @@ span.li {
 
 span.li:before {
     content: "\25B8";
-    line-height: 100%;
     position: absolute;
     left: -20px;
 }
