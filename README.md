@@ -1,5 +1,5 @@
 ## Notebook
-https://aditya-r-m.github.io/notebook/?s00
+[https://aditya-r-m.github.io/notebook/?s00](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s00.tex) | [s01](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s01.tex) | [s02](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s02.tex)
 
 The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and github storage integration through octokit.
 
@@ -26,15 +26,4 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | e | VIM | Move to word end |
 | [0-9]+ | VIM | Repeat the VIM command that follows |
 
-The following convenience function available in browser console can be used to directly commit changes to the notebook repository pages on github,
-
-```js
-commit(personal_access_token, user, repository, branch, page, message);
-```
-
-A simple python server setup is included to enable local auto-save functionality.
-
-```console
-git clone https://github.com/aditya-r-m/notebook.git && cd notebook
-python3 server.py
-```
+The convenience function `save(personal_access_token)` is available in browser console to directly commit changes to the notebook pages repository on github.
