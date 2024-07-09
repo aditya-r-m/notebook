@@ -12,38 +12,7 @@
         }
     </script>
     <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
-    <!-- MathJax can also be served locally through a separate server,
-        https://docs.mathjax.org/en/latest/web/hosting.html
-        https://stackoverflow.com/a/21957017/5664000  -->
-    <!-- <script id="MathJax-script" src="http://localhost:8000/mathjax/tex-chtml.js" defer></script> -->
-    <script src="script.js" defer></script>
-    <script type="module">
-        import { Octokit } from "https://esm.sh/octokit";
-        // Github commits can be pushed directly from browser console using the following function.
-        window.commit = (auth, user, repository, branch, page, message) => {
-            // Octokit.js
-            // https://github.com/octokit/core.js#readme
-            const octokit = new Octokit({
-                auth
-            });
-            const headers = {
-                'X-GitHub-Api-Version': '2022-11-28'
-            };
-            octokit.request(`GET /repos/${user}/${repository}/contents/pages/${page}.tex?ref=${branch}`, {
-                headers
-            }).then(({ data: { sha } }) => sha).catch(_ => undefined).then(sha =>
-                octokit.request(`PUT /repos/${user}/${repository}/contents/pages/${page}.tex`, {
-                    branch,
-                    message,
-                    content: btoa(unescape(encodeURIComponent(Array.from(
-                        document.getElementsByClassName('span-input'))
-                        .map(x => x.innerText)
-                        .join('\n')))),
-                    sha,
-                    headers
-                })).then(_ => console.log('commit successful')).catch(err => console.log(err));
-        };
-    </script>
+    <script type="module" src="script.js" defer></script>
 </head>
 
 <body>
