@@ -110,14 +110,15 @@ function handleKeyDown(event) {
         scroll(1, event.shiftKey);
         event.preventDefault();
         return false;
-    } else if (!viMode &&
-        (event.key === 'Escape' || (event.ctrlKey && event.key === '['))) {
-        viMode = true;
-        window.textInput.setAttribute("contenteditable", "false");
-        if (!window.textInput.innerText) window.textInput.innerText = " ";
-        const range = document.getSelection().getRangeAt(0);
-        range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
-        range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+    } else if (event.key === 'Escape' || (event.ctrlKey && event.key === '[')) {
+        if (!viMode) {
+            viMode = true;
+            window.textInput.setAttribute("contenteditable", "false");
+            if (!window.textInput.innerText) window.textInput.innerText = " ";
+            const range = document.getSelection().getRangeAt(0);
+            range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
+            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+        }
         event.preventDefault();
         return false;
     } else if (viMode) {
