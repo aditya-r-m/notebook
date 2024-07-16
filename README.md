@@ -8,8 +8,8 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 
 | Keybinding | Mode | Command |
 | ---------- | ---- | ------- |
-| Enter | ALL | Scroll down, Create new line |
-| Shift+Enter | ALL | Scroll up |
+| Enter | ALL | Create line |
+| Shift+Enter | ALL | Delete line |
 | Esc, Ctrl+[ | INS | Vi Mode |
 | i | VIM | Insert before caret |
 | a | VIM | Insert after caret |

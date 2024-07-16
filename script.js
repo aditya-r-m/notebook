@@ -9,6 +9,9 @@ let repo = urlSearchParams.has('repo') ? urlSearchParams.get('repo') : prompt("E
 let file = urlSearchParams.has('file') ? urlSearchParams.get('file') : prompt("Enter file name:");
 let branch = urlSearchParams.has('branch') ? urlSearchParams.get('branch') : "main";
 
+let lines = [];
+let cursor = 0;
+
 new Octokit().request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}`)
     .then(({
         data: {
@@ -16,26 +19,11 @@ new Octokit().request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}
         }
     }) => atob(content))
     .catch(() => "hl|tc|[New Page]\n")
-    .then(txt => txt.split("\n").forEach((line, i) => {
-        let s = document.createElement("span");
-        document.body.appendChild(s);
-        s.setAttribute("id", `s${i}i`);
-        s.classList.add("span-input");
-        s.innerText = line || " ";
-        cs = i;
-        createSpan();
-    }))
-    .then(() => {
-        window[`s${cs}o`].classList.add("editing");
-        window.textInput.innerText = window[`s${cs}i`].innerText;
-        createSpan();
-        setTimeout(() => {
-            window.textInput.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-            initializeSelection();
-        }, 256);
+    .then(text => {
+        lines = text.split("\n");
+        lines.forEach(appendNewSpan);
+        refreshOutputRange();
+        scroll(lines.length);
     });
 
 window.save = (auth) => {
@@ -51,15 +39,24 @@ window.save = (auth) => {
             octokit.request(`PUT /repos/${user}/${repo}/contents/${file}`, {
                 branch,
                 message: `${sha ? "update" : "create"} ${file}`,
-                content: btoa(unescape(encodeURIComponent(Array.from(
-                        document.getElementsByClassName('span-input'))
-                    .map(x => x.innerText)
-                    .join('\n')))),
+                content: btoa(lines.join('\n')),
                 sha,
             }))
         .then(_ => console.log('commit successful'))
         .catch(err => console.log(err));
 };
+
+function appendNewSpan() {
+    let i = document.getElementsByTagName("span").length;
+    let newSpan = document.createElement("span");
+    newSpan.setAttribute("id", `s${i}o`);
+    newSpan.classList.add("span-output");
+    document.body.appendChild(newSpan);
+}
+
+function removeLastSpan() {
+    window[`s${document.getElementsByTagName("span").length - 1}o`].remove();
+}
 
 let supportedStyles = ["hl", "hs", "li", "tc"];
 
@@ -76,29 +73,16 @@ function typeset(el) {
         .catch((err) => console.log('Typeset failed: ' + err.message));
 }
 
-let cs = 0;
-
-function createSpan() {
-    if (!window[`s${cs}i`]) {
-        let s = document.createElement("span");
-        s.setAttribute("id", `s${cs}i`);
-        document.body.appendChild(s);
-        s.innerText = " ";
-        window[`s${cs}i`].classList.add("span-input");
+function refreshOutputRange(start, end) {
+    for (let i = (start || 0); i < (end || lines.length); i++) {
+        window[`s${i}o`].innerText = lines[i];
+        typeset(window[`s${i}o`]);
     }
-    if (!window[`s${cs}o`]) {
-        let s = document.createElement("span");
-        s.setAttribute("id", `s${cs}o`);
-        document.body.insertBefore(s, window.textInput);
-        window[`s${cs}o`].classList.add("span-output");
-    }
-    window[`s${cs}o`].innerText = window[`s${cs}i`].innerText;
-    typeset(window[`s${cs}o`]);
 }
 
-function handleKeyUp(event) {
-    window[`s${cs}o`].innerText = window[`s${cs}i`].innerText = window.textInput.innerText || " ";
-    typeset(window[`s${cs}o`]);
+function handleKeyUp() {
+    lines[cursor] = window.textInput.innerText;
+    refreshOutputRange(cursor, cursor + 1);
 }
 document.body.onkeyup = handleKeyUp;
 
@@ -107,17 +91,29 @@ let viModeBuffer = 0;
 
 function handleKeyDown(event) {
     if (event.key === 'Enter') {
-        scroll(1, event.shiftKey);
+        if (event.shiftKey) {
+            if (cursor) {
+                scroll(-1);
+                removeLastSpan();
+                lines.splice(cursor + 1, 1);
+            }
+        } else {
+            lines.splice(cursor + 1, 0, " ");
+            appendNewSpan();
+            scroll(1);
+        }
+        refreshOutputRange(cursor);
         event.preventDefault();
         return false;
     } else if (event.key === 'Escape' || (event.ctrlKey && event.key === '[')) {
         if (!viMode) {
             viMode = true;
             window.textInput.setAttribute("contenteditable", "false");
-            if (!window.textInput.innerText) window.textInput.innerText = " ";
-            const range = document.getSelection().getRangeAt(0);
-            range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+            if (window.textInput.childNodes.length) {
+                const range = document.getSelection().getRangeAt(0);
+                range.setStart(window.textInput.childNodes[0], Math.max(0, Math.min(window.textInput.childNodes[0].length, range.startOffset) - 1));
+                range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+            }
         }
         event.preventDefault();
         return false;
@@ -127,8 +123,10 @@ function handleKeyDown(event) {
             viModeBuffer *= 10;
             viModeBuffer += parseInt(event.key);
             return;
-        } else if (event.key === "j" || event.key === "k") {
-            scroll(Math.max(1, viModeBuffer), event.key === "k", true);
+        } else if (event.key === "j") {
+            scroll(Math.max(1, viModeBuffer));
+        } else if (event.key === "k") {
+            scroll(Math.min(-1, -viModeBuffer));
         } else if (viModeNavigation(event)) {
             viModeBuffer = Math.max(0, viModeBuffer - 1);
             while (viModeBuffer--) {
@@ -152,7 +150,9 @@ function viModeTransition(event) {
             break;
         case 'A':
             const range = document.getSelection().getRangeAt(0);
-            range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
+            if (window.textInput.childNodes.length) {
+                range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
+            }
             range.collapse(false);
             break;
         default:
@@ -165,6 +165,9 @@ function viModeTransition(event) {
 }
 
 function viModeNavigation(event) {
+    if (!window.textInput.childNodes.length) {
+        return false;
+    }
     const range = document.getSelection().getRangeAt(0);
     const atLineBreak = () => window.textInput.innerText[range.startOffset] === '.' ||
         (window.textInput.innerText[range.startOffset] === '\\' &&
@@ -222,6 +225,9 @@ function viModeNavigation(event) {
 
 function initializeSelection() {
     window.textInput.focus();
+    if (!window.textInput.childNodes.length) {
+        return;
+    }
     const range = document.getSelection().getRangeAt(0);
     if (!viMode) {
         range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length);
@@ -232,21 +238,12 @@ function initializeSelection() {
     }
 }
 
-function scroll(i, r, soft) {
-    window[`s${cs}o`].classList.remove("editing");
-    let spanCount = document.getElementsByClassName("span-input").length;
-    while (i--) {
-        if (r) {
-            cs = Math.max(cs - 1, 0);
-            window.textInput.after(window[`s${cs + 1}o`]);
-        } else {
-            cs = soft ? Math.min(cs + 1, spanCount - 1) : cs + 1;
-            createSpan();
-            window.textInput.before(window[`s${cs}o`]);
-        }
-    }
-    window.textInput.innerText = window[`s${cs}i`].innerText;
-    window[`s${cs}o`].classList.add("editing");
+function scroll(i) {
+    window[`s${cursor}o`].classList.remove("editing");
+    cursor = Math.max(0, Math.min(lines.length - 1, cursor + i));
+    window.textInput.innerText = lines[cursor];
+    window[`s${cursor}o`].after(window.textInput);
+    window[`s${cursor}o`].classList.add("editing");
     window.textInput.scrollIntoView({
         behavior: "smooth",
         block: "center"
