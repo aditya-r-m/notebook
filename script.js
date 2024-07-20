@@ -12,12 +12,28 @@ let branch = urlSearchParams.has('branch') ? urlSearchParams.get('branch') : "ma
 let lines = [];
 let cursor = 0;
 
-new Octokit().request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}`)
+function decode(base64) {
+    const binString = atob(base64);
+    return new TextDecoder().decode(Uint8Array.from(binString, (m) => m.codePointAt(0)));
+}
+
+function encode(txt) {
+    const binString = Array.from(new TextEncoder().encode(txt), (byte) =>
+        String.fromCodePoint(byte),
+    ).join("");
+    return btoa(binString);
+}
+
+new Octokit().request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}`, {
+        headers: {
+            'If-None-Match': ''
+        }
+    })
     .then(({
         data: {
             content
         }
-    }) => atob(content))
+    }) => decode(content))
     .catch(() => "hl|tc|[New Page]\n")
     .then(text => {
         lines = text.split("\n");
@@ -26,20 +42,24 @@ new Octokit().request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}
         scroll(lines.length);
     });
 
-window.save = (auth) => {
+window.save = (auth, targetBranch) => {
     let octokit = new Octokit({
         auth
     });
-    octokit.request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}`)
+    octokit.request(`GET /repos/${user}/${repo}/contents/${file}?ref=${targetBranch || branch}`, {
+            headers: {
+                'If-None-Match': ''
+            }
+        })
         .then(({
             data: {
                 sha
             }
         }) => sha).catch(_ => undefined).then(sha =>
             octokit.request(`PUT /repos/${user}/${repo}/contents/${file}`, {
-                branch,
+                branch: targetBranch || branch,
                 message: `${sha ? "update" : "create"} ${file}`,
-                content: btoa(lines.join('\n')),
+                content: encode(lines.join("\n")),
                 sha,
             }))
         .then(_ => console.log('commit successful'))
@@ -88,6 +108,11 @@ document.body.onkeyup = handleKeyUp;
 
 let viMode = false;
 let viModeBuffer = 0;
+const bracketPairs = {
+    '(': ')',
+    '{': '}',
+    '[': ']'
+};
 
 function handleKeyDown(event) {
     if (event.key === 'Enter') {
@@ -105,7 +130,7 @@ function handleKeyDown(event) {
         refreshOutputRange(cursor);
         event.preventDefault();
         return false;
-    } else if (event.key === 'Escape' || (event.ctrlKey && event.key === '[')) {
+    } else if (event.key === 'Escape' || (!event.ctrlKey && event.key === 'Tab')) {
         if (!viMode) {
             viMode = true;
             window.textInput.setAttribute("contenteditable", "false");
@@ -134,6 +159,15 @@ function handleKeyDown(event) {
             }
         } else viModeTransition(event);
         viModeBuffer = 0;
+        event.preventDefault();
+        return false;
+    } else if (window.textInput.innerText && bracketPairs[event.key]) {
+        const range = document.getSelection().getRangeAt(0);
+        const startOffset = range.startOffset;
+        const previousText = window.textInput.innerText;
+        const infix = event.key + (previousText[startOffset - 1] == '\\' ? ' \\' : '') + bracketPairs[event.key];
+        window.textInput.innerText = previousText.slice(0, startOffset) + infix + previousText.slice(startOffset);
+        range.setStart(window.textInput.childNodes[0], startOffset + 1);
         event.preventDefault();
         return false;
     }

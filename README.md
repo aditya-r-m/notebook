@@ -10,7 +10,7 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | ---------- | ---- | ------- |
 | Enter | ALL | Create line |
 | Shift+Enter | ALL | Delete line |
-| Esc, Ctrl+[ | INS | Vi Mode |
+| Esc, Tab | INS | Vi Mode |
 | i | VIM | Insert before caret |
 | a | VIM | Insert after caret |
 | A | VIM | Insert after line end |
@@ -26,4 +26,4 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | e | VIM | Move to word end |
 | [0-9]+ | VIM | Repeat the VIM command that follows |
 
-The convenience function `save(personal_access_token)` is available in browser console to directly commit changes to the notebook pages repository on github.
+The convenience function `save(personal_access_token, targetBranch?)` is available in browser console to directly commit changes to the notebook pages repository on github.
