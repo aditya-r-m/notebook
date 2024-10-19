@@ -3,7 +3,7 @@
 
 The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and github storage integration through octokit.
 
-The user can edit one line at a time in the text insert mode, and navigate the text in Vi Mode. A line can be formatted using prefixes `h[l,s]|tc|li|` for [large,small]-headings, centered-text, & list-items.
+The user can edit one line at a time in the text insert mode, and navigate the text in Vi Mode. A line can be formatted using prefixes `h[l,s]|tc|li|` for [large,small]-headings, [centered,monospace]-text, & [list,indented]-items.
 Note that the Caret in Vi Mode is simulated through text selection, so it will temporarily disappear during custom text selection & when out of focus.
 
 | Keybinding | Mode | Command |

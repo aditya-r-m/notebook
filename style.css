@@ -2,24 +2,16 @@ body {
     text-align: center;
     padding-top: 30vh;
     padding-bottom: 50vh;
-    background-color: #202124;
-    background-color: #3E1C43;
 }
 
 * {
     background: transparent;
     text-align: left;
-    color: #CCCCCC;
     scrollbar-width: none;
 }
 
-.MathJax * {
-    color: #AECBFA;
-    color: #FBE1FF;
-}
-
-[data-mjx-error] {
-    background-color: black;
+span {
+    font-family: 'Roboto';
 }
 
 span.span-output,
@@ -28,7 +20,6 @@ p {
     width: 80vw;
     margin: 10px;
     font-size: 20px;
-    font-family: sans-serif;
 }
 
 span.span-output:before {
@@ -36,23 +27,42 @@ span.span-output:before {
     display: inline;
 }
 
-span.hs {
-    color: #DDDDDD;
-    font-size: 24px;
-    font-family: serif;
+p {
+    margin: 0px;
+    padding: 15px;
+    border: 1px solid gray;
+    font-family: 'Monospace';
+}
+
+a {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    text-decoration: none;
 }
 
 span.hl {
-    color: #DDDDDD;
     margin-top: 30px;
     font-size: 28px;
-    font-family: serif;
+}
+
+span.hs {
+    font-size: 24px;
+}
+
+span.tc {
+    text-align: center;
+}
+
+span.ms {
+    font-family: monospace;
 }
 
 span.li {
     margin: 5px;
     position: relative;
     left: 30px;
+    min-height: 20px;
 }
 
 span.li:before {
@@ -61,35 +71,22 @@ span.li:before {
     left: -20px;
 }
 
-span.tc {
-    text-align: center;
+span.i1 {
+    margin: 0px;
+    padding-left: 30px;
 }
 
-span.editing,
-p {
-    left: 0px;
-    margin-top: 30px;
-    padding: 2vw;
-    border: 1px solid gray;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-        rgba(0, 0, 0, 0.12) 0px -12px 30px,
-        rgba(0, 0, 0, 0.12) 0px 4px 6px,
-        rgba(0, 0, 0, 0.17) 0px 12px 13px,
-        rgba(0, 0, 0, 0.09) 0px -3px 5px;
+span.i2 {
+    margin: 0px;
+    padding-left: 60px;
 }
 
-p {
-    margin-top: 0px;
-    font-family: monospace;
+span.i3 {
+    margin: 0px;
+    padding-left: 90px;
 }
 
-pre {
-    display: none;
-}
-
-a {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    text-decoration: none;
+span.i4 {
+    margin: 0px;
+    padding-left: 120px;
 }
