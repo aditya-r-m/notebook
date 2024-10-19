@@ -130,7 +130,7 @@ function handleKeyDown(event) {
         refreshOutputRange(cursor);
         event.preventDefault();
         return false;
-    } else if (event.key === 'Escape' || (!event.ctrlKey && event.key === 'Tab')) {
+    } else if (event.key === 'Escape' || (event.ctrlKey && event.key === '[') || (!event.ctrlKey && event.key === 'Tab')) {
         if (!viMode) {
             viMode = true;
             window.textInput.setAttribute("contenteditable", "false");

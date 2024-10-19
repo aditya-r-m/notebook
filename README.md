@@ -10,7 +10,7 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | ---------- | ---- | ------- |
 | Enter | ALL | Create line |
 | Shift+Enter | ALL | Delete line |
-| Esc, Tab | INS | Vi Mode |
+| Esc, Ctrl+[, Tab | INS | Vi Mode |
 | i | VIM | Insert before caret |
 | a | VIM | Insert after caret |
 | A | VIM | Insert after line end |
