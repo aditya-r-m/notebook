@@ -78,7 +78,7 @@ function removeLastSpan() {
     window[`s${document.getElementsByTagName("span").length - 1}o`].remove();
 }
 
-let supportedStyles = ["hl", "hs", "tc", "ms", "li", "i1", "i2", "i3"];
+let supportedStyles = ["hl", "hs", "tc", "ms", "li", "i0", "i1", "i2", "i3"];
 
 function typeset(el) {
     for (let supportedStyle of supportedStyles) {

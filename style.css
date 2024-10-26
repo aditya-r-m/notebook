@@ -71,6 +71,11 @@ span.li:before {
     left: -20px;
 }
 
+span.i0 {
+    margin: 0px;
+    padding-left: 0px;
+}
+
 span.i1 {
     margin: 0px;
     padding-left: 30px;
