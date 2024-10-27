@@ -164,7 +164,7 @@ function handleKeyDown(event) {
     } else if (window.textInput.innerText && bracketPairs[event.key]) {
         const range = document.getSelection().getRangeAt(0);
         const startOffset = range.startOffset;
-        const previousText = window.textInput.innerText;
+        const previousText = window.textInput.innerText.replace('\n', ' ');
         const infix = event.key + (previousText[startOffset - 1] == '\\' ? ' \\' : '') + bracketPairs[event.key];
         window.textInput.innerText = previousText.slice(0, startOffset) + infix + previousText.slice(startOffset);
         range.setStart(window.textInput.childNodes[0], startOffset + 1);
