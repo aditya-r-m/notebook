@@ -18,12 +18,15 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | j | VIM | Scroll down |
 | k | VIM | Scroll up |
 | l | VIM | Scroll right |
-| ^ | VIM | Move to line start |
-| $ | VIM | Move to line end |
-| p | VIM | Move to sentence start |
-| n | VIM | Move to sentence end |
 | b | VIM | Move to word start |
 | e | VIM | Move to word end |
-| [0-9]+ | VIM | Repeat the VIM command that follows |
+| P | VIM | Move to sentence start |
+| N | VIM | Move to sentence end |
+| v | VIM | Selection mode |
+| y | VIM | copy selected text |
+| d | VIM | cut selected text |
+| c | VIM | cut selected text and Insert before caret |
+| p | VIM | paste selected text from copy/cut operation |
+| [0-9]+ | VIM | Repeat the VIM navigation command that follows |
 
 The convenience function `save(personal_access_token, targetBranch?)` is available in browser console to directly commit changes to the notebook pages repository on github.

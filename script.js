@@ -108,6 +108,8 @@ document.body.onkeyup = handleKeyUp;
 
 let viMode = false;
 let viModeBuffer = 0;
+let viSelectMode = false;
+let viClipboard = "";
 const bracketPairs = {
     '(': ')',
     '{': '}',
@@ -131,6 +133,7 @@ function handleKeyDown(event) {
         event.preventDefault();
         return false;
     } else if (event.key === 'Escape' || (event.ctrlKey && event.key === '[') || (!event.ctrlKey && event.key === 'Tab')) {
+        viSelectMode = false;
         if (!viMode) {
             viMode = true;
             window.textInput.setAttribute("contenteditable", "false");
@@ -157,6 +160,38 @@ function handleKeyDown(event) {
             while (viModeBuffer--) {
                 viModeNavigation(event);
             }
+        } else if (event.key === "v") {
+            viSelectMode = !viSelectMode;
+        } else if (event.key === "c" || event.key === "d" || event.key === "y") {
+            viSelectMode = false;
+            viClipboard = document.getSelection().toString();
+            let rangeStart = document.getSelection().getRangeAt(0).startOffset;
+            let rangeEnd = document.getSelection().getRangeAt(0).endOffset;
+            if (event.key === "y") {
+                document.getSelection().getRangeAt(0).setStart(window.textInput.childNodes[0], rangeEnd - 1);
+                document.getSelection().getRangeAt(0).setEnd(window.textInput.childNodes[0], rangeEnd);    
+            } else {
+                window.textInput.innerText =
+                    window.textInput.innerText.substring(0, rangeStart)
+                    + window.textInput.innerText.substring(rangeEnd);
+                let correctedRangeStart = Math.max(0, Math.min(window.textInput.innerText.length - 1, rangeStart));
+                window.textInput.innerText = window.textInput.innerText.replace("  ", " ");
+                document.getSelection().getRangeAt(0).setStart(window.textInput.childNodes[0], correctedRangeStart);
+                document.getSelection().getRangeAt(0).setEnd(window.textInput.childNodes[0], correctedRangeStart + 1);
+                if (event.key === "c") {
+                    viModeTransition({ key: correctedRangeStart == rangeStart ? "i" : "a" });
+                }
+            }
+        } else if (event.key === "p") {
+            viSelectMode = false;
+            let rangeEnd = document.getSelection().getRangeAt(0).endOffset;
+            window.textInput.innerText =
+                window.textInput.innerText.substring(0, rangeEnd)
+                + viClipboard
+                + window.textInput.innerText.substring(rangeEnd);
+            window.textInput.innerText = window.textInput.innerText.replace("  ", " l");
+            document.getSelection().getRangeAt(0).setStart(window.textInput.childNodes[0], rangeEnd - 1);
+            document.getSelection().getRangeAt(0).setEnd(window.textInput.childNodes[0], rangeEnd);
         } else viModeTransition(event);
         viModeBuffer = 0;
         event.preventDefault();
@@ -203,57 +238,58 @@ function viModeNavigation(event) {
         return false;
     }
     const range = document.getSelection().getRangeAt(0);
-    const atLineBreak = () => window.textInput.innerText[range.startOffset] === '.' ||
-        (window.textInput.innerText[range.startOffset] === '\\' &&
-            window.textInput.innerText[range.startOffset + 1] === '\\');
+    const atWordBreak = (i) => atLineBreak(i) || 
+        window.textInput.innerText[i] === ',' ||
+        window.textInput.innerText[i] === ' ' ||
+        bracketPairs[window.textInput.innerText[i]];
+    const atLineBreak = (i) => window.textInput.innerText[i] === '.' ||
+        (window.textInput.innerText[i] === '\\' &&
+            window.textInput.innerText[i + 1] === '\\');
+    let rangeStart = range.startOffset;
+    let rangeEnd = range.endOffset;
+    let rangeLength = window.textInput.innerText.length;
     switch (event.key) {
         case 'h':
-            range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+            rangeStart--;
+            if (!viSelectMode) rangeEnd = rangeStart + 1;
             break;
         case 'l':
-            range.setStart(window.textInput.childNodes[0], Math.min(range.startOffset + 1, window.textInput.childNodes[0].length - 1));
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+            rangeEnd++;
+            if (!viSelectMode) rangeStart = rangeEnd - 1;
             break;
-        case '^':
-            range.setStart(window.textInput.childNodes[0], 0);
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
-            break;
-        case '$':
-            range.setStart(window.textInput.childNodes[0], window.textInput.childNodes[0].length - 1);
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
-            break;
-        case 'p':
+        case 'P':
             do {
-                range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
-                range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
-            } while (range.startOffset && !atLineBreak());
+                rangeStart--;
+            } while (rangeStart > 0 && !atLineBreak(rangeStart));
+            if (!viSelectMode) rangeEnd = rangeStart + 1;
             break;
-        case 'n':
+        case 'N':
             do {
-                range.setStart(window.textInput.childNodes[0], Math.min(range.startOffset + 1, window.textInput.childNodes[0].length - 1));
-                range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
-            } while (range.startOffset < window.textInput.childNodes[0].length - 1 && !atLineBreak());
+                rangeEnd++;
+            } while (rangeEnd < rangeLength && !atLineBreak(rangeEnd - 1));
+            if (!viSelectMode) rangeStart = rangeEnd - 1;
             break;
         case 'b':
-            range.setStart(window.textInput.childNodes[0], Math.max(0, range.startOffset - 1));
-            while (range.startOffset &&
-                window.textInput.childNodes[0].textContent[range.startOffset - 1] !== " ") {
-                range.setStart(window.textInput.childNodes[0], range.startOffset - 1);
-            }
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+            rangeStart--;
+            do {
+                rangeStart--;
+            } while (rangeStart > 0 && !atWordBreak(rangeStart));
+            if (rangeStart) rangeStart += 1;
+            if (!viSelectMode) rangeEnd = rangeStart + 1;
             break;
         case 'e':
-            range.setStart(window.textInput.childNodes[0], Math.min(range.startOffset + 1, window.textInput.childNodes[0].length - 1));
-            while (range.startOffset < window.textInput.childNodes[0].length - 1 &&
-                window.textInput.childNodes[0].textContent[range.startOffset + 1] !== " ") {
-                range.setStart(window.textInput.childNodes[0], range.startOffset + 1);
-            }
-            range.setEnd(window.textInput.childNodes[0], range.startOffset + 1);
+            rangeEnd++;
+            do {
+                rangeEnd++;
+            } while (rangeEnd < rangeLength && !atWordBreak(rangeEnd - 1));
+            if (rangeEnd < rangeLength) rangeEnd -= 1;
+            if (!viSelectMode) rangeStart = rangeEnd - 1;
             break;
         default:
             return false;
     }
+    range.setStart(window.textInput.childNodes[0], Math.max(0, Math.min(rangeLength - 1, rangeStart)));
+    range.setEnd(window.textInput.childNodes[0], Math.max(1, Math.min(rangeLength, rangeEnd)));
     return true;
 }
 

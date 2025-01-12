@@ -31,7 +31,7 @@ p {
     margin: 0px;
     padding: 15px;
     border: 1px solid gray;
-    font-family: 'Monospace';
+    font-family: "Lucida Console", Courier, monospace;
 }
 
 a {
@@ -55,7 +55,7 @@ span.tc {
 }
 
 span.ms {
-    font-family: monospace;
+    font-family: "Lucida Console", Courier, monospace;
 }
 
 span.li {
