@@ -72,6 +72,7 @@ function appendNewSpan() {
     newSpan.setAttribute("id", `s${i}o`);
     newSpan.classList.add("span-output");
     document.body.appendChild(newSpan);
+    newSpan.addEventListener('mousedown', () => scroll(i - cursor));
 }
 
 function removeLastSpan() {
