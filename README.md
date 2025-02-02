@@ -1,5 +1,5 @@
 ## Notebook
-[https://aditya-r-m.github.io/notebook/?s00](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s00.tex) | [s01](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s01.tex) | [s02](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s02.tex)
+[https://aditya-r-m.github.io/notebook/?s00](https://aditya-r-m.github.io/notebook/?s00) | [s01](https://aditya-r-m.github.io/notebook/?s01) | [s02](https://aditya-r-m.github.io/notebook/?s02)
 
 The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and a simple local server setup to enable autosave.
 
