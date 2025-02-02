@@ -1,7 +1,7 @@
 ## Notebook
 [https://aditya-r-m.github.io/notebook/?s00](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s00.tex) | [s01](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s01.tex) | [s02](https://aditya-r-m.github.io/notebook/?user=aditya-r-m&repo=notebook-pages&file=s02.tex)
 
-The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and github storage integration through octokit.
+The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and a simple local server setup to enable autosave.
 
 The user can edit one line at a time in the text insert mode, and navigate the text in Vi Mode. A line can be formatted using `${supportedStyle}|` prefix.
 Note that the Caret in Vi Mode is simulated through text selection, so it will temporarily disappear during custom text selection & when out of focus.
@@ -28,5 +28,3 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | c | VIM | cut selected text and Insert before caret |
 | p | VIM | paste selected text from copy/cut operation |
 | [0-9]+ | VIM | Repeat the VIM navigation command that follows |
-
-The convenience function `save(personal_access_token, targetBranch?)` is available in browser console to directly commit changes to the notebook pages repository on github.

@@ -1,14 +1,3 @@
-import {
-    Octokit
-} from "https://esm.sh/octokit";
-
-let urlSearchParams = new URLSearchParams(location.search);
-
-let user = urlSearchParams.has('user') ? urlSearchParams.get('user') : prompt("Enter user name:");
-let repo = urlSearchParams.has('repo') ? urlSearchParams.get('repo') : prompt("Enter repo name:");
-let file = urlSearchParams.has('file') ? urlSearchParams.get('file') : prompt("Enter file name:");
-let branch = urlSearchParams.has('branch') ? urlSearchParams.get('branch') : "main";
-
 let lines = [];
 let cursor = 0;
 
@@ -24,47 +13,41 @@ function encode(txt) {
     return btoa(binString);
 }
 
-new Octokit().request(`GET /repos/${user}/${repo}/contents/${file}?ref=${branch}`, {
-        headers: {
-            'If-None-Match': ''
-        }
-    })
-    .then(({
-        data: {
-            content
-        }
-    }) => decode(content))
-    .catch(() => "hl|tc|[New Page]\n")
+let page = window.location.search.replace("?", "");
+if (!page) page = "s00";
+
+function load() {
+	return fetch(`${window.location.href.replace(/\?.*/, '')}/pages/${page}.tex`, {
+		'method': 'GET',
+		'Content-type': 'text/plain'
+	})
+    .then(res => res.ok ? res.text() : "hl|tc|[New Page]")
     .then(text => {
         lines = text.split("\n");
         lines.forEach(appendNewSpan);
         refreshOutputRange();
         scroll(lines.length);
     });
+}
 
-window.save = (auth, targetBranch) => {
-    let octokit = new Octokit({
-        auth
-    });
-    octokit.request(`GET /repos/${user}/${repo}/contents/${file}?ref=${targetBranch || branch}`, {
-            headers: {
-                'If-None-Match': ''
-            }
-        })
-        .then(({
-            data: {
-                sha
-            }
-        }) => sha).catch(_ => undefined).then(sha =>
-            octokit.request(`PUT /repos/${user}/${repo}/contents/${file}`, {
-                branch: targetBranch || branch,
-                message: `${sha ? "update" : "create"} ${file}`,
-                content: encode(lines.join("\n")),
-                sha,
-            }))
-        .then(_ => console.log('commit successful'))
-        .catch(err => console.log(err));
-};
+function save() {
+	return fetch(`${window.location.href.replace(/\?.*/, '')}/pages/${page}.tex`, {
+		method: 'PUT',
+		headers: {
+			'Content-type': 'application/json'
+		},
+		body: lines.join('\n').replace(/\xA0/g,' ').replace(/\s+/g, ' ')
+	}).then(res => res.ok ? Promise.resolve() : Promise.reject(res));
+}
+
+function autoSave() {
+	return new Promise(r => setTimeout(r, 2048))
+		.then(save)
+		.then(autoSave)
+		.catch(r => console.log(r));
+}
+
+load(); //.then(autoSave);
 
 function appendNewSpan() {
     let i = document.getElementsByTagName("span").length;
@@ -316,7 +299,7 @@ function scroll(i) {
     window[`s${cursor}o`].after(window.textInput);
     window[`s${cursor}o`].classList.add("editing");
     window.textInput.scrollIntoView({
-        behavior: "smooth",
+        behavior: "instant",
         block: "center"
     });
     initializeSelection();
