@@ -36,7 +36,7 @@ function save() {
 		headers: {
 			'Content-type': 'application/json'
 		},
-		body: lines.join('\n').replace(/\xA0/g,' ').replace(/\s+/g, ' ')
+		body: lines.map(line => line.replace(/\xA0/g,' ').replace(/\s+/g, ' ')).join('\n')
 	}).then(res => res.ok ? Promise.resolve() : Promise.reject(res));
 }
 
@@ -47,7 +47,7 @@ function autoSave() {
 		.catch(r => console.log(r));
 }
 
-load(); //.then(autoSave);
+load().then(autoSave);
 
 function appendNewSpan() {
     let i = document.getElementsByTagName("span").length;
