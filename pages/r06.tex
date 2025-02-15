@@ -3,7 +3,7 @@ Temporal Difference Learning methods use techniques from both Dynamic Programmin
 Given \( v_\pi(s) = E_\pi[G_t \ | \ S_t = s] = E_\pi[R_t + \gamma v_\pi(S_{t+1}) \ | \ S_t = s] \),
 li| MC target is an estimate because expected value of \( G_t \) is not known.
 li| DP target is an estimate because even though the expected values of returns are completely determined by the environment dynamics, \( v_\pi(S_{t+1}) \) is not known and the current estimate \( V(S_{t+1}) \) is used instead.
-Temporal Difference Learning is an estimate because of both of these reasons,
+Temporal Difference Learning is an estimate because of both of these reasons. Note that all 3 of these approaches differ in prediction, and extend to control using some form of Generalized Policy Iteration. For TD(0), the Policy Evaluation step is based on the following update,
 \( V(S_t) \leftarrow V(S_t) + \alpha [R_{t+1} + \gamma V(S_{t+1}) - V(S_t)] \)
 The quantity multiplied to the learning rate is called the TD error : \( \delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \)
 MC error can be written as a sum of TD errors, which holds exactly when the array doesn't change as in MC-implementations and may hold approximately if the array changes as in TD(0)-implementations.
