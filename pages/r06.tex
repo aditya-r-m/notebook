@@ -10,9 +10,12 @@ MC error can be written as a sum of TD errors, which holds exactly when the arra
 \( \begin{aligned} G_t - V(S_t) &= R_{t+1} + \gamma G_{t+1} - V(S_t) \\ &= \delta_t + \gamma(G_{t+1} - V(S_{t+1})) \\ &= \delta_t + \gamma(R_{t+2} + \gamma G_{t+2} - V(S_{t+1})) \\ &= \delta_t + \gamma(\delta_{t+1} + \gamma(G_{t+2} - V(S_{t+2}))) = \ldots = \sum_{k=t}^{T-1} \gamma^{k-t}\delta_{k} \end{aligned} \)
 hs| Q-Learning and SARSA
 TD(0) can be implemented in various ways. First, note that the policy \( \pi(a|s) \) can be derived from \( Q(s,a) \) using an approach such as \( \epsilon \)-Greedy.
-li| On-Policy (SARSA) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + Q(S', A') - Q(S, A)] \)
-li| Off-Policy (Q-learning) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \max_a(Q(S', a)) - Q(S,A)] \)
+li| On-Policy (SARSA) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \gamma Q(S', A') - Q(S, A)] \)
+li| Off-Policy (Q-learning) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \gamma \max_a(Q(S', a)) - Q(S,A)] \)
 The key difference in these approaches is that while both iterations derive the next state \( S' \) using \( A \leftarrow \pi(a|S) \), SARSA uses the next action taken by the policy \( A' \leftarrow \pi(a|S') \) for Q-function estimation whereas Q-learning assumes Greedy policy for Q-function estimation.
 Both of these approaches converge to the optimal policy asymptotically if \( \alpha \) is reduced incrementally, but may differ in online performance. Given that Q-learning does not keep track of random exploratory moves in its estimation, it may learn more aggressive optimal Q-values. On the other hand, SARSA will keep random exploratory moves covered in Q-value estimates, which will lead to safer policies that stay distant from high cost states during training itself, and better online performance.
 The variance in SARSA training can be reduced by directly taking expected value of \( Q(S', A') \) at each step,
-li| Expected SARSA : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \sum_a \pi(a|s) \ Q(S, a) - Q(S,A)] \)
+li| Expected SARSA : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \gamma \sum_a \pi(a|s) \ Q(S, a) - Q(S,A)] \)
+All of these approaches suffer from a "maximization bias" because the maximum of estimates is used as the estimate of maximum. For example, if all actions from a state are slightly negative, the Q-values learned will still be slightly positive. This may even lead to clearly incorrect policies that take significant amount of iterations to converge. Another way to look at this problem is that we are using the same samples to pick the optimal-looking action and bootstrap on the action-estimate.
+A way to resolve this is to use two Q-functions : \( Q_0, Q_1 \). The \( \epsilon \)-Greedy policy can be defined using \( Q_0+Q_1 \) and each of the policies can be picked as target of an iteration with probability of 0.5. The following equation represents the key update operation for Q-learning,
+li| Double Q-learning : \( Q_i(S, A) \leftarrow Q_i(S, A) + \alpha[R + \gamma Q_{1-i}(S', \arg\max_a Q_i(S', a)) - Q_i(S, A)] \)
