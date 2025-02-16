@@ -1,4 +1,4 @@
-hl|tc| Temporal-Difference Learning
+hl|tc| Temporal-Difference Learning : TD(0)
 Temporal Difference Learning methods use techniques from both Dynamic Programming and Monte Carlo Methods. This approach employs bootstrapping to learn value function without any knowledge of the environment.
 Given \( v_\pi(s) = E_\pi[G_t \ | \ S_t = s] = E_\pi[R_t + \gamma v_\pi(S_{t+1}) \ | \ S_t = s] \),
 li| MC target is an estimate because expected value of \( G_t \) is not known.
@@ -8,3 +8,11 @@ Temporal Difference Learning is an estimate because of both of these reasons. No
 The quantity multiplied to the learning rate is called the TD error : \( \delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \)
 MC error can be written as a sum of TD errors, which holds exactly when the array doesn't change as in MC-implementations and may hold approximately if the array changes as in TD(0)-implementations.
 \( \begin{aligned} G_t - V(S_t) &= R_{t+1} + \gamma G_{t+1} - V(S_t) \\ &= \delta_t + \gamma(G_{t+1} - V(S_{t+1})) \\ &= \delta_t + \gamma(R_{t+2} + \gamma G_{t+2} - V(S_{t+1})) \\ &= \delta_t + \gamma(\delta_{t+1} + \gamma(G_{t+2} - V(S_{t+2}))) = \ldots = \sum_{k=t}^{T-1} \gamma^{k-t}\delta_{k} \end{aligned} \)
+hs| Q-Learning and SARSA
+TD(0) can be implemented in various ways. First, note that the policy \( \pi(a|s) \) can be derived from \( Q(s,a) \) using an approach such as \( \epsilon \)-Greedy.
+li| On-Policy (SARSA) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + Q(S', A') - Q(S, A)] \)
+li| Off-Policy (Q-learning) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \max_a(Q(S', a)) - Q(S,A)] \)
+The key difference in these approaches is that while both iterations derive the next state \( S' \) using \( A' \leftarrow \pi(a|s) \), SARSA uses the action taken by the policy for Q-function update as well.
+Both of these approaches converge to the optimal policy asymptotically if \( \alpha \) is reduced incrementally, but may differ in online performance. Given that Q-learning does not keep track of random exploratory moves in its estimation, it may learn more aggressive optimal Q-values. On the other hand, SARSA will keep random exploratory moves covered in Q-value estimates, which will lead to safer policies that stay distant from high cost states during training itself, and better online performance.
+The variance in SARSA training can be reduced by directly taking expected value of \( Q(S', A') \) at each step,
+li| Expected SARSA : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \sum_a \pi(a|s) \ Q(S, a) - Q(S,A)] \)
