@@ -12,7 +12,7 @@ hs| Q-Learning and SARSA
 TD(0) can be implemented in various ways. First, note that the policy \( \pi(a|s) \) can be derived from \( Q(s,a) \) using an approach such as \( \epsilon \)-Greedy.
 li| On-Policy (SARSA) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + Q(S', A') - Q(S, A)] \)
 li| Off-Policy (Q-learning) : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \max_a(Q(S', a)) - Q(S,A)] \)
-The key difference in these approaches is that while both iterations derive the next state \( S' \) using \( A \leftarrow \pi(a|s) \), SARSA uses the next action taken by the policy \( A' \leftarrow \pi(a|S') \) for Q-function estimation whereas Q-learning assumes Greedy policy for Q-function estimation.
+The key difference in these approaches is that while both iterations derive the next state \( S' \) using \( A \leftarrow \pi(a|S) \), SARSA uses the next action taken by the policy \( A' \leftarrow \pi(a|S') \) for Q-function estimation whereas Q-learning assumes Greedy policy for Q-function estimation.
 Both of these approaches converge to the optimal policy asymptotically if \( \alpha \) is reduced incrementally, but may differ in online performance. Given that Q-learning does not keep track of random exploratory moves in its estimation, it may learn more aggressive optimal Q-values. On the other hand, SARSA will keep random exploratory moves covered in Q-value estimates, which will lead to safer policies that stay distant from high cost states during training itself, and better online performance.
 The variance in SARSA training can be reduced by directly taking expected value of \( Q(S', A') \) at each step,
 li| Expected SARSA : \( Q(S, A) \leftarrow Q(S, A) + \alpha[R + \sum_a \pi(a|s) \ Q(S, a) - Q(S,A)] \)
