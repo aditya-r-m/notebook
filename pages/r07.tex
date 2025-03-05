@@ -6,3 +6,8 @@ Similar to the single step errors, we can show that MC error can also be approxi
 An important property of n-step returns is that their expectations is guaranteed to be a better estimate of \( v_\pi \) than \(V_{t+n-1} \) in a worst case sense,
 \( \max_s | E_\pi(G_{t:t+n} | S_t = s) - v_\pi(s) | \le \gamma^n \max_s | V_{t+n-1}(s) - v_\pi(s) | \)
 This property ensures convergence to correct predictions under appropriate conditions.
+hs| n-step Sarsa
+An \( \epsilon \)-Greedy policy \( \pi \) can be learnt using the Q-function n-step estimate as follows,
+\( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha [ \sum_{i=0}^{n-1} \gamma^i R_{t+i+1} + \gamma^n Q_{t+n-1}(S_{t+n}, A_{t+n}) - Q_{t+n-1}(S_t, A_t) ] \)
+n-step expected Sarsa can also be implemented using similar updates,
+\( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha [ \sum_{i=0}^{n-1} \gamma^i R_{t+i+1} + \gamma^n \sum_a \pi(a|s) \ Q_{t+n-1} (S_{t+n}, a) - Q_{t+n-1}(S_t, A_t) ] \)
