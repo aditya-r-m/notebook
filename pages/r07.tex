@@ -11,3 +11,4 @@ An \( \epsilon \)-Greedy policy \( \pi \) can be learnt using the Q-function n-s
 \( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha [ \sum_{i=0}^{n-1} \gamma^i R_{t+i+1} + \gamma^n Q_{t+n-1}(S_{t+n}, A_{t+n}) - Q_{t+n-1}(S_t, A_t) ] \)
 n-step expected Sarsa can also be implemented using similar updates,
 \( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha [ \sum_{i=0}^{n-1} \gamma^i R_{t+i+1} + \gamma^n \sum_a \pi(a|s) \ Q_{t+n-1} (S_{t+n}, a) - Q_{t+n-1}(S_t, A_t) ] \)
+Note that the n-step return of Sarsa can be written in terms of a novel TD-error : \( G_{t:t+n} = Q_{t-1}(S_t, A_t) + \sum_{k=t}^{t+n-1} \gamma^{k-t}[R_{k+1} + \gamma Q_k(S_{k+1}, A_{k+1}) - Q_{k-1}(S_k, A_k)] \)
