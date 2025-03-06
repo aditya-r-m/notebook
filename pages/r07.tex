@@ -12,3 +12,7 @@ An \( \epsilon \)-Greedy policy \( \pi \) can be learnt using the Q-function n-s
 n-step expected Sarsa can also be implemented using similar updates,
 \( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha [ \sum_{i=0}^{n-1} \gamma^i R_{t+i+1} + \gamma^n \sum_a \pi(a|s) \ Q_{t+n-1} (S_{t+n}, a) - Q_{t+n-1}(S_t, A_t) ] \)
 Note that the n-step return of Sarsa can be written in terms of a novel TD-error : \( G_{t:t+n} = Q_{t-1}(S_t, A_t) + \sum_{k=t}^{t+n-1} \gamma^{k-t}[R_{k+1} + \gamma Q_k(S_{k+1}, A_{k+1}) - Q_{k-1}(S_k, A_k)] \)
+hs| n-step Off-policy Learning
+Importance sampling ratio \( \rho_{t+1:t+n} = \Pi_{k=t+1}^{t+n} \frac{\pi(A_k|S_k)}{b(A_k|S_k)} \) can be used for learning the Q-function with a behavior policy \( b \) different from target policy \( \pi \),
+\( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha \rho_{t+1:t+n} [G_{t:t+n} - Q_{t+n-1}(S_t, A_t)] \)
+Note that we are excluding the factor \( \frac{\pi(A_t|S_t)}{b(A_t|S_t)} \) because \( Q_{t+n}(S_t, A_t) \) by default assumes that learning is specific to the case \( (A_t|S_t) \). A similar factor can also be used with Off-policy Learning for n-step expected Sarsa by excluding \( \frac{\pi(A_{t+n}|S_{t+n})}{b(A_{t+n}|S_{t+n})} \) to account for the fact that the last step of expected Sarsa is not part of the sampling process, and is a direct expectation computation instead.
