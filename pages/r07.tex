@@ -20,6 +20,14 @@ Importance sampling ratio can also be embedded into the return itself using per-
 For basic state-value function, the simplest approach will be to define \( G_{t:h} = \rho_t (R_{t+1} + G_{t+1:h}) \) where \( \rho = \frac{\pi(A_t | S_t)}{b(A_t|S_t)} \). An improvement on this that can reduce variance significantly is to add a term called control variate as follows : \( G_{t:h} = \rho_t(R_{t+1} + G_{t+1:h}) + (1 - \rho_t) V_{h-1}(S_t) \)
 For action-value function, the current Reward will not be scaled, and the control variate will need to account for the fact that recursion has to end with the expected value of returns,
 \( G_{t:h} = R_{t+1} + \gamma( \rho_{t+1} G_{t+1:h} + \bar{V}_{h-1}(S_{t+1}) - \rho_{t+1} Q_{h-1}(S_{t+1}, A_{t+1}) ) = R_{t+1} + \gamma \rho_{t+1} (G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1})) + \gamma \bar{V}_{h-1}(S_{t+1}), \ \ t < h \le T \)
-There is also a very natural approach called n-step Tree-backup learning, which implements Off-policy learning without importance sampling -- similar to expected Sarsa and Q-learning for single-step cases,
-\( G_{t:t+n} = R_{t+1} + \gamma \sum_{a\neq A_t} \pi(a|S_{t+1}) Q_{t+n-1}(S_{t+1}, a) + \gamma \pi(A_{t+1}|S_{t+1}) G_{t+1:t+n}\)
+There is also a very natural approach called n-step Tree-backup learning, which implements Off-policy learning without importance sampling like expected Sarsa and Q-learning for single-step cases,
+\( G_{t:t+n} = R_{t+1} + \gamma \sum_{a\neq A_{t+1}} \pi(a|S_{t+1}) Q_{t+n-1}(S_{t+1}, a) + \gamma \pi(A_{t+1}|S_{t+1}) G_{t+1:t+n}\)
 \( Q_{t+n}(S_t, A_t) = Q_{t+n-1}(S_t, A_t) + \alpha[G_{t:t+n} - Q_{t+n-1}(S_t, A_t)] \)
+To summarize the 3 key approaches covered for off-policy learning,
+li| n-step Sarsa uses importance sampling for every step
+li| n-step Expected Sarsa uses importance sampling for every step excluding the last, where it uses expected value
+li| n-step Tree backup uses expected value for all the steps
+These ideas can be unified starting with the observation that the return for Tree backup can be written in terms of the expected approximate value \( \bar{V} \),
+\( G_{t:h} = R_{t+1} + \gamma \pi(A_{t+1} | S_{t+1}) (G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1}) )+ \gamma \bar{V}_{h-1}(S_{t+1}) \)
+This form looks identical to n-step return for Sarsa with control variates. Combining these two using a Vector \( \sigma \), we get a unified algorithm using the following return,
+\( Q(\sigma) : G_{t:h} = R_{t+1} + \gamma (\sigma_{t+1} \rho_{t+1} + (1-\sigma_{t+1}) \ \pi(A_{t+1} | S_{t+1})) (G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1})) + \gamma \bar{V}_{h-1}(S_{t+1}) \)
