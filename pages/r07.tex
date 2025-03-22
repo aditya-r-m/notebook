@@ -30,4 +30,6 @@ li| n-step Tree backup uses expected value for all the steps
 These ideas can be unified starting with the observation that the return for Tree backup can be written in terms of the expected approximate value \( \bar{V} \),
 \( G_{t:h} = R_{t+1} + \gamma \pi(A_{t+1} | S_{t+1}) (G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1}) )+ \gamma \bar{V}_{h-1}(S_{t+1}) \)
 This form looks identical to n-step return for Sarsa with control variates. Combining these two using a Vector \( \sigma \), we get a unified algorithm using the following return,
-\( Q(\sigma) : G_{t:h} = R_{t+1} + \gamma (\sigma_{t+1} \rho_{t+1} + (1-\sigma_{t+1}) \ \pi(A_{t+1} | S_{t+1})) (G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1})) + \gamma \bar{V}_{h-1}(S_{t+1}) \)
+\( Q(\sigma) : G_{t:h} = R_{t+1} + \gamma (\sigma_{t+1} \rho_{t+1} + (1-\sigma_{t+1}) \ \pi(A_{t+1} | S_{t+1})) (G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1})) + \gamma \bar{V}_{h-1}(S_{t+1}) = R_{t+1} + \gamma \bar{V}_{h-1}(S_{t+1}) + \gamma m_{t+1}(G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1})) \)
+Note that this unified return can also be seen as a composition of single-step TD-errors \( \delta_{t} = R_{t+1} + \gamma \bar{V}(S_{t+1}) - Q(S_t, A_t) \),
+\( \begin{aligned} G_{t:h} - Q(S_t, A_t) &= \delta_{t} + \gamma m_{t+1} (G_{t+1:h} - Q(S_{t+1}, A_{t+1})) \\ &= \delta_t + \gamma m_{t+1} (\delta_{t+1} + \gamma m_{t+2} (G_{t+2:h} - Q(S_{t+2}, A_{t+2}))) \\ &= \ldots = \sum_{k=0}^{h-t} \delta_{t+k} \prod_{i=k+1}^{h-t} \gamma m_{t+i} \end{aligned} \)
