@@ -1,53 +1,15 @@
 let lines = [];
 let cursor = 0;
 
-function decode(base64) {
-    const binString = atob(base64);
-    return new TextDecoder().decode(Uint8Array.from(binString, (m) => m.codePointAt(0)));
-}
-
-function encode(txt) {
-    const binString = Array.from(new TextEncoder().encode(txt), (byte) =>
-        String.fromCodePoint(byte),
-    ).join("");
-    return btoa(binString);
-}
-
-let page = window.location.search.replace("?", "");
-if (!page) page = "s00";
-
-function load() {
-	return fetch(`${window.location.href.replace(/\?.*/, '')}/pages/${page}.tex`, {
-		'method': 'GET',
-		'Content-type': 'text/plain'
-	})
-    .then(res => res.ok ? res.text() : "hl|tc|[New Page]")
-    .then(text => {
-        lines = text.split("\n");
-        lines.forEach(appendNewSpan);
-        refreshOutputRange();
-        scroll(lines.length);
-    });
-}
-
-function save() {
-	return fetch(`${window.location.href.replace(/\?.*/, '')}/pages/${page}.tex`, {
-		method: 'PUT',
-		headers: {
-			'Content-type': 'application/json'
-		},
-		body: lines.map(line => line.replace(/\xA0/g,' ').replace(/\s+/g, ' ')).join('\n')
-	}).then(res => res.ok ? Promise.resolve() : Promise.reject(res));
-}
-
-function autoSave() {
-	return new Promise(r => setTimeout(r, 2048))
-		.then(save)
-		.then(autoSave)
-		.catch(r => console.log(r));
-}
-
-load().then(autoSave);
+fetch(`${window.location.href.replace(/\?.*/, '')}/sample.tex`, {
+    'method': 'GET',
+    'Content-type': 'text/plain'
+}).then(res => res.ok ? res.text() : "hl|tc|[New Page]").then(text => {
+    lines = text.split("\n");
+    lines.forEach(appendNewSpan);
+    refreshOutputRange();
+    scroll(lines.length);
+});
 
 function appendNewSpan() {
     let i = document.getElementsByTagName("span").length;
@@ -153,7 +115,7 @@ function handleKeyDown(event) {
             let rangeEnd = document.getSelection().getRangeAt(0).endOffset;
             if (event.key === "y") {
                 document.getSelection().getRangeAt(0).setStart(window.textInput.childNodes[0], rangeEnd - 1);
-                document.getSelection().getRangeAt(0).setEnd(window.textInput.childNodes[0], rangeEnd);    
+                document.getSelection().getRangeAt(0).setEnd(window.textInput.childNodes[0], rangeEnd);
             } else {
                 window.textInput.innerText =
                     window.textInput.innerText.substring(0, rangeStart)
@@ -222,7 +184,7 @@ function viModeNavigation(event) {
         return false;
     }
     const range = document.getSelection().getRangeAt(0);
-    const atWordBreak = (i) => atLineBreak(i) || 
+    const atWordBreak = (i) => atLineBreak(i) ||
         window.textInput.innerText[i] === ',' ||
         window.textInput.innerText[i] === ' ' ||
         bracketPairs[window.textInput.innerText[i]];

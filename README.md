@@ -1,7 +1,6 @@
-## Notebook
-[https://aditya-r-m.github.io/notebook/?s00](https://aditya-r-m.github.io/notebook/?s00) | [s01](https://aditya-r-m.github.io/notebook/?s01) | [s02](https://aditya-r-m.github.io/notebook/?s02)
+## Notebook [(github.io)](https://aditya-r-m.github.io/notebook/)
 
-The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering, basic Vi keybindings, and a simple local server setup to enable autosave.
+The project contains a minimal web interface optimized for capturing mathematical notes with live MathJax rendering and basic Vi keybindings.
 
 The user can edit one line at a time in the text insert mode, and navigate the text in Vi Mode. A line can be formatted using `${supportedStyle}|` prefix.
 Note that the Caret in Vi Mode is simulated through text selection, so it will temporarily disappear during custom text selection & when out of focus.
