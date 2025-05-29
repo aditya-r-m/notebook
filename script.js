@@ -1,15 +1,19 @@
 let lines = [];
 let cursor = 0;
 
-fetch(`${window.location.href.replace(/\?.*/, '')}/sample.tex`, {
-    'method': 'GET',
-    'Content-type': 'text/plain'
-}).then(res => res.ok ? res.text() : "hl|tc|[New Page]").then(text => {
+function load(text) {
+    document.body.innerHTML = `<p id="textInput" contenteditable="true" onblur="this.focus()" autofocus="true"></p>`;
+    cursor = 0;
     lines = text.split("\n");
     lines.forEach(appendNewSpan);
     refreshOutputRange();
     scroll(lines.length);
-});
+}
+
+fetch(`${window.location.href.replace(/\?.*/, '')}/sample.tex`, {
+    'method': 'GET',
+    'Content-type': 'text/plain'
+}).then(res => res.ok ? res.text() : "hl|tc|[New Page]").then(load);
 
 function appendNewSpan() {
     let i = document.getElementsByTagName("span").length;
@@ -63,7 +67,15 @@ const bracketPairs = {
 };
 
 function handleKeyDown(event) {
-    if (event.key === 'Enter') {
+    if (event.ctrlKey && event.key === 'v') {
+        navigator.clipboard.readText().then(load);
+        event.preventDefault();
+        return false;
+    } else if (event.ctrlKey && event.key === 'c') {
+        navigator.clipboard.writeText(lines.join('\n'));
+        event.preventDefault();
+        return false;
+    } else if (event.key === 'Enter') {
         if (event.shiftKey) {
             if (cursor) {
                 scroll(-1);

@@ -9,6 +9,8 @@ Note that the Caret in Vi Mode is simulated through text selection, so it will t
 | ---------- | ---- | ------- |
 | Enter | ALL | Create line |
 | Shift+Enter | ALL | Delete line |
+| Ctrl+v | ALL | Load from clipboard |
+| Ctrl+c | ALL | Save to clipboard |
 | Esc, Ctrl+[, Tab | INS | Vi Mode |
 | i | VIM | Insert before caret |
 | a | VIM | Insert after caret |
